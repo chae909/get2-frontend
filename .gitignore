@@ -1,0 +1,72 @@
+# =========================================
+# dependencies
+# =========================================
+# 로컬에 설치된 패키지 폴더
+node_modules/
+# npm 캐시 폴더 (프로젝트 루트에 있는 경우)
+npm-cache/
+
+# =========================================
+# build output
+# =========================================
+# 빌드 결과물이 저장되는 폴더
+dist/
+.dist/
+build/
+
+# =========================================
+# logs
+# =========================================
+# 각종 로그 파일
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# =========================================
+# environment variables
+# =========================================
+# 환경 변수 파일 (API 키 등 민감 정보 포함)
+.env
+.env.local
+.env.*.local
+
+# =========================================
+# IDEs and editors
+# =========================================
+# VSCode 관련 설정 파일
+.vscode/*
+!.vscode/extensions.json
+
+# JetBrains (WebStorm, etc.) 관련 설정 파일
+.idea/
+
+# =========================================
+# OS generated files
+# =========================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+
+# =========================================
+# miscellaneous
+# =========================================
+# 캐시 및 임시 파일
+.npm
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
