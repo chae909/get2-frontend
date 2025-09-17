@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import ChatbotPage from '../pages/ChatbotPage';
+import React from 'react';
 
 // Icons
 const PartyPopperIcon = ({ className }: { className?: string }) => (
@@ -46,19 +45,10 @@ const AnimatedHeroBackground = () => (
 // Hero Section Component
 interface HeroSectionProps {
   onGetStarted?: () => void;
+  onDemo?: () => void;
 }
 
-const HeroSection: React.FC<HeroSectionProps> = ({ onGetStarted }) => {
-  const [currentPage, setCurrentPage] = useState<'landing' | 'chatbot'>('landing');
-
-  const handleDemo = () => {
-    setCurrentPage('chatbot');
-  };
-
-  if (currentPage === 'chatbot') {
-    return <ChatbotPage/>;
-  }
-
+const HeroSection: React.FC<HeroSectionProps> = ({ onGetStarted, onDemo }) => {
   return (
     <section className="relative min-h-[70vh] sm:h-[80vh] flex items-center justify-center text-white text-center bg-gradient-to-br from-purple-900 via-purple-800 to-pink-800 overflow-hidden px-4">
       <AnimatedHeroBackground />
@@ -81,7 +71,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onGetStarted }) => {
             무료로 시작하기
           </button>
           <button 
-            onClick={handleDemo}
+            onClick={onDemo}
             className="w-full sm:w-auto bg-white/20 backdrop-blur-sm text-white font-bold py-4 px-8 rounded-full shadow-lg transition-all transform hover:scale-105 border border-white/30">
             데모 보기
           </button>

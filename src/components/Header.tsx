@@ -42,8 +42,22 @@ const Logo: React.FC = () => (
 );
 
 // Header Component
-const Header: React.FC<{ onStartChatbot: () => void }> = ({ onStartChatbot }) => {
+interface HeaderProps {
+  onStartChatbot: () => void;
+  onLogin?: () => void;
+  onSignup?: () => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ onStartChatbot, onLogin, onSignup }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const handleMobileMenuToggle = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/10 backdrop-blur-sm border-b border-white/20">
@@ -51,25 +65,71 @@ const Header: React.FC<{ onStartChatbot: () => void }> = ({ onStartChatbot }) =>
         <Logo />
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
-          <a href="#features" className="text-white/90 hover:text-white transition-colors text-sm lg:text-base">기능</a>
-          <a href="#how-it-works" className="text-white/90 hover:text-white transition-colors text-sm lg:text-base">이용방법</a>
-          <a href="#pricing" className="text-white/90 hover:text-white transition-colors text-sm lg:text-base">요금제</a>
+        <nav className="hidden lg:flex items-center space-x-6 xl:space-x-8">
+          <a href="#features" className="text-white/90 hover:text-white transition-colors text-sm xl:text-base">기능</a>
+          <a href="#how-it-works" className="text-white/90 hover:text-white transition-colors text-sm xl:text-base">이용방법</a>
+          <a href="#pricing" className="text-white/90 hover:text-white transition-colors text-sm xl:text-base">요금제</a>
+          
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={onStartChatbot}
+              className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-semibold py-2 px-4 xl:px-6 rounded-full transition-all transform hover:scale-105 text-sm xl:text-base"
+            >
+              AI 상담 시작
+            </button>
+            
+            {onLogin && (
+              <button 
+                onClick={onLogin}
+                className="text-white/90 hover:text-white font-medium transition-colors text-sm xl:text-base"
+              >
+                로그인
+              </button>
+            )}
+            
+            {onSignup && (
+              <button 
+                onClick={onSignup}
+                className="bg-white/20 backdrop-blur-sm text-white font-semibold py-2 px-4 xl:px-6 rounded-full border border-white/30 hover:bg-white/30 transition-all text-sm xl:text-base"
+              >
+                회원가입
+              </button>
+            )}
+          </div>
+        </nav>
+
+        {/* Tablet Navigation */}
+        <nav className="hidden md:flex lg:hidden items-center space-x-4">
           <button
             onClick={onStartChatbot}
-            className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-semibold py-2 px-4 lg:px-6 rounded-full transition-all transform hover:scale-105 text-sm lg:text-base"
+            className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-semibold py-2 px-4 rounded-full transition-all transform hover:scale-105 text-sm"
           >
-            AI 상담 시작
+            AI 상담
           </button>
-          <button className="bg-white/20 backdrop-blur-sm text-white font-semibold py-2 px-4 lg:px-6 rounded-full border border-white/30 hover:bg-white/30 transition-all text-sm lg:text-base">
-            로그인
-          </button>
+          
+          {onLogin && (
+            <button 
+              onClick={onLogin}
+              className="text-white/90 hover:text-white font-medium transition-colors text-sm"
+            >
+              로그인
+            </button>
+          )}
+          
+          {onSignup && (
+            <button 
+              onClick={onSignup}
+              className="bg-white/20 backdrop-blur-sm text-white font-semibold py-2 px-4 rounded-full border border-white/30 hover:bg-white/30 transition-all text-sm"
+            >
+              회원가입
+            </button>
+          )}
         </nav>
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden p-2 text-white"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="md:hidden p-2 text-white hover:bg-white/10 rounded-lg transition-colors"
+          onClick={handleMobileMenuToggle}
         >
           {isMobileMenuOpen ? <XIcon className="w-6 h-6" /> : <MenuIcon className="w-6 h-6" />}
         </button>
@@ -79,18 +139,63 @@ const Header: React.FC<{ onStartChatbot: () => void }> = ({ onStartChatbot }) =>
       {isMobileMenuOpen && (
         <div className="md:hidden bg-white/20 backdrop-blur-lg border-t border-white/20">
           <nav className="container mx-auto px-4 py-4 flex flex-col space-y-3">
-            <a href="#features" className="text-white/90 hover:text-white transition-colors py-2">기능</a>
-            <a href="#how-it-works" className="text-white/90 hover:text-white transition-colors py-2">이용방법</a>
-            <a href="#pricing" className="text-white/90 hover:text-white transition-colors py-2">요금제</a>
-            <button
-              onClick={onStartChatbot}
-              className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-semibold py-3 px-6 rounded-full transition-all text-center"
+            <a 
+              href="#features" 
+              className="text-white/90 hover:text-white transition-colors py-2 px-2 rounded-lg hover:bg-white/10"
+              onClick={closeMobileMenu}
             >
-              AI 상담 시작
-            </button>
-            <button className="bg-white/20 backdrop-blur-sm text-white font-semibold py-3 px-6 rounded-full border border-white/30 hover:bg-white/30 transition-all text-center">
-              로그인
-            </button>
+              기능
+            </a>
+            <a 
+              href="#how-it-works" 
+              className="text-white/90 hover:text-white transition-colors py-2 px-2 rounded-lg hover:bg-white/10"
+              onClick={closeMobileMenu}
+            >
+              이용방법
+            </a>
+            <a 
+              href="#pricing" 
+              className="text-white/90 hover:text-white transition-colors py-2 px-2 rounded-lg hover:bg-white/10"
+              onClick={closeMobileMenu}
+            >
+              요금제
+            </a>
+            
+            <div className="pt-2 border-t border-white/20 space-y-3">
+              <button
+                onClick={() => {
+                  onStartChatbot();
+                  closeMobileMenu();
+                }}
+                className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-semibold py-3 px-6 rounded-full transition-all"
+              >
+                AI 상담 시작
+              </button>
+              
+              {onLogin && (
+                <button 
+                  onClick={() => {
+                    onLogin();
+                    closeMobileMenu();
+                  }}
+                  className="w-full text-white/90 hover:text-white font-medium py-3 px-6 rounded-full hover:bg-white/10 transition-all"
+                >
+                  로그인
+                </button>
+              )}
+              
+              {onSignup && (
+                <button 
+                  onClick={() => {
+                    onSignup();
+                    closeMobileMenu();
+                  }}
+                  className="w-full bg-white/20 backdrop-blur-sm text-white font-semibold py-3 px-6 rounded-full border border-white/30 hover:bg-white/30 transition-all"
+                >
+                  회원가입
+                </button>
+              )}
+            </div>
           </nav>
         </div>
       )}
