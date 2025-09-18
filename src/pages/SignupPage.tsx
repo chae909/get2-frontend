@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Input, Card, CardHeader, CardContent, CardTitle } from '../components/ui';
+import { useAuth } from '../contexts/AuthContext';
+import type { RegisterUserData } from '../types';
 
 // Icons
 const ArrowLeftIcon = ({ className }: { className?: string }) => (
@@ -56,6 +58,7 @@ interface SignupPageProps {
 }
 
 const SignupPage: React.FC<SignupPageProps> = ({ onBack, onLogin }) => {
+  const { register } = useAuth();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -121,13 +124,117 @@ const SignupPage: React.FC<SignupPageProps> = ({ onBack, onLogin }) => {
 
     setIsLoading(true);
     
-    // Simulate API call
+    // 백엔드 API 형식에 맞게 데이터 변환
+    // 백엔드 User 모델: username=None, USERNAME_FIELD='email', REQUIRED_FIELDS=['nickname']
+    const registerData: RegisterUserData = {
+      email: formData.email,
+      password: formData.password,
+      password_confirm: formData.confirmPassword,
+      nickname: formData.name  // 사용자 이름을 nickname으로 사용
+    };
+
+    console.log('Sending registration data:', registerData);
+    
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      console.log('Signup attempt:', formData);
-      // Handle successful signup here
-    } catch (error) {
+      // 회원가입 API 호출
+      await register(registerData);
+      
+      // 회원가입 성공 메시지
+      alert('회원가입이 완료되었습니다! 로그인 페이지로 이동합니다.');
+      
+      // 로그인 페이지로 이동
+      onLogin();
+      
+      // 자동 로그인은 일시적으로 비활성화 (로그인 API 문제 해결 후 활성화)
+      // await login({ 
+      //   email: formData.email, 
+      //   password: formData.password 
+      // });
+      
+    } catch (error: any) {
       console.error('Signup error:', error);
+      console.error('Error response:', error.response);
+      console.error('Error response data:', error.response?.data);
+      console.error('Error response status:', error.response?.status);
+      console.error('Sent data:', registerData);
+      
+      // 에러 메시지 처리
+      if (error.response?.data) {
+        const errorData = error.response.data;
+        console.log('Detailed error data:', errorData);
+        const newErrors: { [key: string]: string } = {};
+        
+        // 서버에서 반환된 에러 메시지를 폼 에러로 설정
+        if (errorData.email) {
+          newErrors.email = Array.isArray(errorData.email) ? errorData.email[0] : errorData.email;
+        }
+        if (errorData.password) {
+          newErrors.password = Array.isArray(errorData.password) ? errorData.password[0] : errorData.password;
+        }
+        if (errorData.nickname) {
+          newErrors.name = Array.isArray(errorData.nickname) ? errorData.nickname[0] : errorData.nickname;
+        }
+        if (errorData.password_confirm) {
+          newErrors.confirmPassword = Array.isArray(errorData.password_confirm) ? errorData.password_confirm[0] : errorData.password_confirm;
+        }
+        if (errorData.non_field_errors) {
+          newErrors.general = Array.isArray(errorData.non_field_errors) ? errorData.non_field_errors[0] : errorData.non_field_errors;
+        }
+        
+        // 구체적인 에러 메시지 매핑
+        if (errorData.non_field_errors) {
+          const errorMsg = Array.isArray(errorData.non_field_errors) ? errorData.non_field_errors[0] : errorData.non_field_errors;
+          
+          // 이메일 관련 에러 처리
+          if (errorMsg.includes('이메일')) {
+            if (errorMsg.includes('이미 존재') || errorMsg.includes('중복')) {
+              newErrors.email = '이미 사용 중인 이메일입니다.';
+            } else if (errorMsg.includes('형식') || errorMsg.includes('올바르지 않습니다')) {
+              newErrors.email = '올바른 이메일 형식을 입력해주세요.';
+            } else {
+              newErrors.email = errorMsg;
+            }
+          }
+          
+          // 비밀번호 관련 에러 처리
+          if (errorMsg.includes('비밀번호')) {
+            if (errorMsg.includes('너무 짧습니다') || errorMsg.includes('최소')) {
+              newErrors.password = '비밀번호는 최소 8자 이상이어야 합니다.';
+            } else if (errorMsg.includes('일반적') || errorMsg.includes('약합니다')) {
+              newErrors.password = '더 강력한 비밀번호를 사용해주세요.';
+            } else if (errorMsg.includes('개인정보') || errorMsg.includes('유사')) {
+              newErrors.password = '개인정보와 유사한 비밀번호는 사용할 수 없습니다.';
+            } else {
+              newErrors.password = errorMsg;
+            }
+          }
+          
+          // 닉네임 관련 에러 처리
+          if (errorMsg.includes('닉네임')) {
+            if (errorMsg.includes('이미 존재') || errorMsg.includes('중복')) {
+              newErrors.name = '이미 사용 중인 닉네임입니다.';
+            } else {
+              newErrors.name = errorMsg;
+            }
+          }
+          
+          // 일반적인 에러인 경우
+          if (!errorMsg.includes('이메일') && !errorMsg.includes('비밀번호') && !errorMsg.includes('닉네임')) {
+            newErrors.general = errorMsg;
+          }
+        }
+        
+        // 전체 에러 메시지 표시 (디버깅용)
+        if (Object.keys(newErrors).length === 0) {
+          newErrors.general = `서버 오류: ${JSON.stringify(errorData)}`;
+        }
+        
+        setErrors(newErrors);
+      } else {
+        const newErrors: { [key: string]: string } = {};
+        newErrors.general = '네트워크 오류가 발생했습니다. 다시 시도해주세요.';
+        setErrors(newErrors);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -287,6 +394,12 @@ const SignupPage: React.FC<SignupPageProps> = ({ onBack, onLogin }) => {
                     <p className="text-sm text-red-600">{errors.terms}</p>
                   )}
                 </div>
+
+                {errors.general && (
+                  <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <p className="text-sm text-red-600">{errors.general}</p>
+                  </div>
+                )}
 
                 <Button
                   type="submit"
