@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Input, Card, CardHeader, CardContent, CardTitle } from '../components/ui';
+import { useAuth } from '../contexts/AuthContext';
 
 // Icons
 const ArrowLeftIcon = ({ className }: { className?: string }) => (
@@ -38,6 +39,7 @@ interface LoginPageProps {
 }
 
 const LoginPage: React.FC<LoginPageProps> = ({ onBack, onSignup }) => {
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -81,13 +83,66 @@ const LoginPage: React.FC<LoginPageProps> = ({ onBack, onSignup }) => {
 
     setIsLoading(true);
     
-    // Simulate API call
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      console.log('Login attempt:', formData);
-      // Handle successful login here
-    } catch (error) {
+      // 로그인 API 호출
+      await login({
+        email: formData.email,
+        password: formData.password
+      });
+      
+      // 로그인 성공 메시지
+      alert('로그인이 성공했습니다!');
+      
+      // 성공 시 대시보드로 리디렉션 또는 다른 처리
+      // 예: window.location.href = '/dashboard';
+      
+    } catch (error: any) {
       console.error('Login error:', error);
+      console.error('Error details:', {
+        message: error.message,
+        code: error.code,
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        headers: error.response?.headers,
+        config: error.config
+      });
+      
+      // 에러 메시지 처리
+      if (error.response?.data) {
+        const errorData = error.response.data;
+        console.log('Server error data:', errorData);
+        const newErrors: { [key: string]: string } = {};
+        
+        // 서버에서 반환된 에러 메시지를 폼 에러로 설정
+        if (errorData.email) {
+          newErrors.email = Array.isArray(errorData.email) ? errorData.email[0] : errorData.email;
+        }
+        if (errorData.password) {
+          newErrors.password = Array.isArray(errorData.password) ? errorData.password[0] : errorData.password;
+        }
+        if (errorData.non_field_errors) {
+          newErrors.general = Array.isArray(errorData.non_field_errors) ? errorData.non_field_errors[0] : errorData.non_field_errors;
+        }
+        if (errorData.detail) {
+          newErrors.general = errorData.detail;
+        }
+        
+        setErrors(newErrors);
+        
+        // 일반적인 에러 메시지 표시
+        if (Object.keys(newErrors).length === 0) {
+          const errorMessage = `로그인 중 오류가 발생했습니다. (Status: ${error.response?.status}) ${JSON.stringify(errorData)}`;
+          console.error('Unhandled error data:', errorData);
+          alert(errorMessage);
+        }
+      } else if (error.request) {
+        console.error('Network error - no response received:', error.request);
+        alert('서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.');
+      } else {
+        console.error('Request setup error:', error.message);
+        alert('요청 설정 중 오류가 발생했습니다. 다시 시도해주세요.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -178,6 +233,12 @@ const LoginPage: React.FC<LoginPageProps> = ({ onBack, onSignup }) => {
                     비밀번호 찾기
                   </button>
                 </div>
+
+                {errors.general && (
+                  <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <p className="text-sm text-red-600">{errors.general}</p>
+                  </div>
+                )}
 
                 <Button
                   type="submit"

@@ -215,12 +215,13 @@ const ChatbotPage: React.FC<ChatbotPageProps> = ({ onBack }) => {
     { id: 'mood', text: '원하는 분위기를 골라주세요', type: 'select', options: ['#활기찬', '#아늑한', '#럭셔리', '#캐주얼', '#테마파티'] }
   ];
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   useEffect(() => {
-    scrollToBottom();
+    // 새 메시지가 추가될 때마다 자동으로 스크롤 (단, 초기 메시지는 제외)
+    if (messages.length > 1) {
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 200);
+    }
   }, [messages]);
 
   useEffect(() => {
@@ -337,22 +338,18 @@ const ChatbotPage: React.FC<ChatbotPageProps> = ({ onBack }) => {
       <DynamicStyles />
       
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
+      <header className="bg-white shadow-sm border-b border-gray-200 fixed top-0 left-0 right-0 z-10">
         <div className="container mx-auto px-4 py-3 sm:py-4 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <button
               onClick={onBack || (() => navigate('/'))}
               className="p-2 hover:bg-gray-100 rounded-full transition-colors sm:hidden"
             >
-              <ArrowLeftIcon className="w-5 h-5 text-gray-600" />
+              <ArrowLeftIcon className="w-5 h-5 text-gray-600 " />
             </button>
             <div className="flex items-center space-x-2 sm:space-x-3">
               <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
                 <PartyPopperIcon className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="font-bold text-lg sm:text-xl text-gray-800">파티 플래너 AI</h1>
-                <p className="text-xs sm:text-sm text-gray-500">당신의 완벽한 파티를 위해</p>
               </div>
             </div>
           </div>
@@ -368,7 +365,7 @@ const ChatbotPage: React.FC<ChatbotPageProps> = ({ onBack }) => {
       </header>
 
       {/* Chat Area */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col mt-16 sm:mt-20">
         <div className="flex-1 overflow-y-auto p-4 sm:p-6">
           <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
             {messages.map((message) => (
