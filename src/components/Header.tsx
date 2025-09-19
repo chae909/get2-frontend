@@ -1,5 +1,8 @@
 // src/components/Header.tsx
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import { User } from 'lucide-react';
 
 // Icons
 const PartyPopperIcon = ({ className }: { className?: string }) => (
@@ -29,17 +32,30 @@ const XIcon = ({ className }: { className?: string }) => (
 );
 
 // Logo Component
-const Logo: React.FC = () => (
-  <div className="flex items-center space-x-2 sm:space-x-3">
-    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-yellow-400 to-pink-500 rounded-full flex items-center justify-center">
-      <PartyPopperIcon className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
+const Logo: React.FC = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+
+  const handleLogoClick = () => {
+    if (isAuthenticated) {
+      navigate('/dashboard');
+    } else {
+      navigate('/');
+    }
+  };
+
+  return (
+    <div className="flex items-center space-x-2 sm:space-x-3 cursor-pointer" onClick={handleLogoClick}>
+      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-yellow-400 to-pink-500 rounded-full flex items-center justify-center">
+        <PartyPopperIcon className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
+      </div>
+      <div className="text-white">
+        <div className="font-bold text-lg sm:text-xl">Get2</div>
+        <div className="text-xs opacity-80 hidden sm:block">PLAY YOUR DAY</div>
+      </div>
     </div>
-    <div className="text-white">
-      <div className="font-bold text-lg sm:text-xl">Get2</div>
-      <div className="text-xs opacity-80 hidden sm:block">PLAY YOUR DAY</div>
-    </div>
-  </div>
-);
+  );
+};
 
 // Header Component
 interface HeaderProps {
@@ -50,6 +66,8 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ onStartChatbot, onLogin, onSignup }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isAuthenticated, user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const handleMobileMenuToggle = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -59,72 +77,135 @@ const Header: React.FC<HeaderProps> = ({ onStartChatbot, onLogin, onSignup }) =>
     setIsMobileMenuOpen(false);
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+    closeMobileMenu();
+  };
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/10 backdrop-blur-sm border-b border-white/20">
       <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center">
         <Logo />
 
-        {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center space-x-6 xl:space-x-8">
-          <a href="#features" className="text-white/90 hover:text-white transition-colors text-sm xl:text-base">기능</a>
-          <a href="#how-it-works" className="text-white/90 hover:text-white transition-colors text-sm xl:text-base">이용방법</a>
-          <a href="#pricing" className="text-white/90 hover:text-white transition-colors text-sm xl:text-base">요금제</a>
-          
-          <div className="flex items-center space-x-3">
-            <button
-              onClick={onStartChatbot}
-              className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-semibold py-2 px-4 xl:px-6 rounded-full transition-all transform hover:scale-105 text-sm xl:text-base"
-            >
-              AI 상담 시작
-            </button>
-            
-            {onLogin && (
-              <button 
-                onClick={onLogin}
-                className="text-white/90 hover:text-white font-medium transition-colors text-sm xl:text-base"
+        {/* Authenticated User Navigation */}
+        {isAuthenticated ? (
+          <>
+            {/* Desktop Navigation - Authenticated */}
+            <nav className="hidden lg:flex items-center space-x-6 xl:space-x-8">
+              <button
+                onClick={() => navigate('/dashboard')}
+                className="text-white/90 hover:text-white transition-colors text-sm xl:text-base"
               >
-                로그인
+                대시보드
               </button>
-            )}
-            
-            {onSignup && (
-              <button 
-                onClick={onSignup}
-                className="bg-white/20 backdrop-blur-sm text-white font-semibold py-2 px-4 xl:px-6 rounded-full border border-white/30 hover:bg-white/30 transition-all text-sm xl:text-base"
+              <button
+                onClick={onStartChatbot}
+                className="text-white/90 hover:text-white transition-colors text-sm xl:text-base"
               >
-                회원가입
+                AI 상담
               </button>
-            )}
-          </div>
-        </nav>
+              
+              <div className="flex items-center space-x-3">
+                <button
+                  onClick={() => navigate('/mypage')}
+                  className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm text-white font-semibold py-2 px-4 xl:px-6 rounded-full border border-white/30 hover:bg-white/30 transition-all text-sm xl:text-base"
+                >
+                  <User className="w-4 h-4" />
+                  <span>{user?.nickname || '마이페이지'}</span>
+                </button>
+                
+                <button 
+                  onClick={handleLogout}
+                  className="text-white/90 hover:text-white font-medium transition-colors text-sm xl:text-base"
+                >
+                  로그아웃
+                </button>
+              </div>
+            </nav>
 
-        {/* Tablet Navigation */}
-        <nav className="hidden md:flex lg:hidden items-center space-x-4">
-          <button
-            onClick={onStartChatbot}
-            className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-semibold py-2 px-4 rounded-full transition-all transform hover:scale-105 text-sm"
-          >
-            AI 상담
-          </button>
-          
-          {onLogin && (
-            <button 
-              onClick={onLogin}
-              className="text-white/90 hover:text-white font-medium transition-colors text-sm"
-            >
-              로그인
-            </button>
-          )}
-          
-          {onSignup && (
-            <button 
-              onClick={onSignup}
-              className="bg-white/20 backdrop-blur-sm text-white font-semibold py-2 px-4 rounded-full border border-white/30 hover:bg-white/30 transition-all text-sm"
-            >
-              회원가입
-            </button>
-          )}
-        </nav>
+            {/* Tablet Navigation - Authenticated */}
+            <nav className="hidden md:flex lg:hidden items-center space-x-4">
+              <button
+                onClick={() => navigate('/dashboard')}
+                className="text-white/90 hover:text-white transition-colors text-sm"
+              >
+                대시보드
+              </button>
+              <button
+                onClick={() => navigate('/mypage')}
+                className="flex items-center space-x-1 bg-white/20 backdrop-blur-sm text-white font-semibold py-2 px-4 rounded-full border border-white/30 hover:bg-white/30 transition-all text-sm"
+              >
+                <User className="w-4 h-4" />
+                <span>{user?.nickname || '마이페이지'}</span>
+              </button>
+            </nav>
+          </>
+        ) : (
+          <>
+            {/* Desktop Navigation - Unauthenticated */}
+            <nav className="hidden lg:flex items-center space-x-6 xl:space-x-8">
+              <a href="#features" className="text-white/90 hover:text-white transition-colors text-sm xl:text-base">기능</a>
+              <a href="#how-it-works" className="text-white/90 hover:text-white transition-colors text-sm xl:text-base">이용방법</a>
+              <a href="#pricing" className="text-white/90 hover:text-white transition-colors text-sm xl:text-base">요금제</a>
+              
+              <div className="flex items-center space-x-3">
+                <button
+                  onClick={onStartChatbot}
+                  className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-semibold py-2 px-4 xl:px-6 rounded-full transition-all transform hover:scale-105 text-sm xl:text-base"
+                >
+                  AI 상담 시작
+                </button>
+                
+                {onLogin && (
+                  <button 
+                    onClick={onLogin}
+                    className="text-white/90 hover:text-white font-medium transition-colors text-sm xl:text-base"
+                  >
+                    로그인
+                  </button>
+                )}
+                
+                {onSignup && (
+                  <button 
+                    onClick={onSignup}
+                    className="bg-white/20 backdrop-blur-sm text-white font-semibold py-2 px-4 xl:px-6 rounded-full border border-white/30 hover:bg-white/30 transition-all text-sm xl:text-base"
+                  >
+                    회원가입
+                  </button>
+                )}
+              </div>
+            </nav>
+
+            {/* Tablet Navigation - Unauthenticated */}
+            <nav className="hidden md:flex lg:hidden items-center space-x-4">
+              <button
+                onClick={onStartChatbot}
+                className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-semibold py-2 px-4 rounded-full transition-all transform hover:scale-105 text-sm"
+              >
+                AI 상담
+              </button>
+              
+              {onLogin && (
+                <button 
+                  onClick={onLogin}
+                  className="text-white/90 hover:text-white font-medium transition-colors text-sm"
+                >
+                  로그인
+                </button>
+              )}
+              
+              {onSignup && (
+                <button 
+                  onClick={onSignup}
+                  className="bg-white/20 backdrop-blur-sm text-white font-semibold py-2 px-4 rounded-full border border-white/30 hover:bg-white/30 transition-all text-sm"
+                >
+                  회원가입
+                </button>
+              )}
+            </nav>
+          </>
+        )}
 
         {/* Mobile Menu Button */}
         <button
@@ -139,63 +220,106 @@ const Header: React.FC<HeaderProps> = ({ onStartChatbot, onLogin, onSignup }) =>
       {isMobileMenuOpen && (
         <div className="md:hidden bg-white/20 backdrop-blur-lg border-t border-white/20">
           <nav className="container mx-auto px-4 py-4 flex flex-col space-y-3">
-            <a 
-              href="#features" 
-              className="text-white/90 hover:text-white transition-colors py-2 px-2 rounded-lg hover:bg-white/10"
-              onClick={closeMobileMenu}
-            >
-              기능
-            </a>
-            <a 
-              href="#how-it-works" 
-              className="text-white/90 hover:text-white transition-colors py-2 px-2 rounded-lg hover:bg-white/10"
-              onClick={closeMobileMenu}
-            >
-              이용방법
-            </a>
-            <a 
-              href="#pricing" 
-              className="text-white/90 hover:text-white transition-colors py-2 px-2 rounded-lg hover:bg-white/10"
-              onClick={closeMobileMenu}
-            >
-              요금제
-            </a>
-            
-            <div className="pt-2 border-t border-white/20 space-y-3">
-              <button
-                onClick={() => {
-                  onStartChatbot();
-                  closeMobileMenu();
-                }}
-                className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-semibold py-3 px-6 rounded-full transition-all"
-              >
-                AI 상담 시작
-              </button>
-              
-              {onLogin && (
+            {isAuthenticated ? (
+              <>
                 <button 
                   onClick={() => {
-                    onLogin();
+                    navigate('/dashboard');
                     closeMobileMenu();
                   }}
-                  className="w-full text-white/90 hover:text-white font-medium py-3 px-6 rounded-full hover:bg-white/10 transition-all"
+                  className="text-white/90 hover:text-white transition-colors py-2 px-2 rounded-lg hover:bg-white/10 text-left"
                 >
-                  로그인
+                  대시보드
                 </button>
-              )}
-              
-              {onSignup && (
                 <button 
                   onClick={() => {
-                    onSignup();
+                    onStartChatbot();
                     closeMobileMenu();
                   }}
-                  className="w-full bg-white/20 backdrop-blur-sm text-white font-semibold py-3 px-6 rounded-full border border-white/30 hover:bg-white/30 transition-all"
+                  className="text-white/90 hover:text-white transition-colors py-2 px-2 rounded-lg hover:bg-white/10 text-left"
                 >
-                  회원가입
+                  AI 상담
                 </button>
-              )}
-            </div>
+                <button 
+                  onClick={() => {
+                    navigate('/mypage');
+                    closeMobileMenu();
+                  }}
+                  className="text-white/90 hover:text-white transition-colors py-2 px-2 rounded-lg hover:bg-white/10 text-left"
+                >
+                  마이페이지 ({user?.nickname})
+                </button>
+                
+                <div className="pt-2 border-t border-white/20">
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-white/90 hover:text-white font-medium py-3 px-6 rounded-full hover:bg-white/10 transition-all text-left"
+                  >
+                    로그아웃
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <a 
+                  href="#features" 
+                  className="text-white/90 hover:text-white transition-colors py-2 px-2 rounded-lg hover:bg-white/10"
+                  onClick={closeMobileMenu}
+                >
+                  기능
+                </a>
+                <a 
+                  href="#how-it-works" 
+                  className="text-white/90 hover:text-white transition-colors py-2 px-2 rounded-lg hover:bg-white/10"
+                  onClick={closeMobileMenu}
+                >
+                  이용방법
+                </a>
+                <a 
+                  href="#pricing" 
+                  className="text-white/90 hover:text-white transition-colors py-2 px-2 rounded-lg hover:bg-white/10"
+                  onClick={closeMobileMenu}
+                >
+                  요금제
+                </a>
+                
+                <div className="pt-2 border-t border-white/20 space-y-3">
+                  <button
+                    onClick={() => {
+                      onStartChatbot();
+                      closeMobileMenu();
+                    }}
+                    className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-semibold py-3 px-6 rounded-full transition-all"
+                  >
+                    AI 상담 시작
+                  </button>
+                  
+                  {onLogin && (
+                    <button 
+                      onClick={() => {
+                        onLogin();
+                        closeMobileMenu();
+                      }}
+                      className="w-full text-white/90 hover:text-white font-medium py-3 px-6 rounded-full hover:bg-white/10 transition-all"
+                    >
+                      로그인
+                    </button>
+                  )}
+                  
+                  {onSignup && (
+                    <button 
+                      onClick={() => {
+                        onSignup();
+                        closeMobileMenu();
+                      }}
+                      className="w-full bg-white/20 backdrop-blur-sm text-white font-semibold py-3 px-6 rounded-full border border-white/30 hover:bg-white/30 transition-all"
+                    >
+                      회원가입
+                    </button>
+                  )}
+                </div>
+              </>
+            )}
           </nav>
         </div>
       )}

@@ -80,6 +80,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setUser(response.user);
       setIsAuthenticated(true);
       
+      // 로그인 성공 시 환영 메시지 표시
+      alert(`${response.user.nickname || response.user.email}님, 환영합니다! 🎉`);
+      
       return response;
     } catch (error: any) {
       console.error('Login failed:', error);
