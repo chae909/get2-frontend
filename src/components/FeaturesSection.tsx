@@ -61,45 +61,45 @@ interface Feature {
 const FeaturesSection: React.FC = () => {
   const features: Feature[] = [
     {
-      icon: <SparklesIcon className="w-12 h-12 text-yellow-500" />,
+      icon: <SparklesIcon className="w-12 h-12 text-purple-400" />,
       title: "AI 맞춤 기획",
       description: "테마, 예산, 인원에 맞춘 완벽한 파티 플랜을 AI가 자동으로 생성합니다"
     },
     {
-      icon: <CalendarIcon className="w-12 h-12 text-purple-500" />,
+      icon: <CalendarIcon className="w-12 h-12 text-purple-400" />,
       title: "일정 관리",
       description: "준비 단계별 체크리스트와 타임라인으로 체계적인 파티 준비가 가능합니다"
     },
     {
-      icon: <UsersIcon className="w-12 h-12 text-pink-500" />,
+      icon: <UsersIcon className="w-12 h-12 text-purple-400" />,
       title: "게스트 관리",
       description: "초대장 발송부터 RSVP 관리, 참석자 현황까지 한 번에 관리하세요"
     },
     {
-      icon: <MapPinIcon className="w-12 h-12 text-blue-500" />,
+      icon: <MapPinIcon className="w-12 h-12 text-purple-400" />,
       title: "장소 추천",
       description: "파티 규모와 테마에 맞는 최적의 장소를 데이터 기반으로 추천합니다"
     },
     {
-      icon: <MusicIcon className="w-12 h-12 text-green-500" />,
+      icon: <MusicIcon className="w-12 h-12 text-purple-400" />,
       title: "엔터테인먼트",
       description: "음악, 게임, 액티비티까지 파티를 더욱 특별하게 만드는 요소들을 제안합니다"
     },
     {
-      icon: <PartyPopperIcon className="w-12 h-12 text-red-500" />,
+      icon: <PartyPopperIcon className="w-12 h-12 text-purple-400" />,
       title: "실시간 지원",
       description: "파티 당일 실시간 지원으로 예상치 못한 상황에도 완벽하게 대응합니다"
     }
   ];
 
   return (
-    <section className="py-16 sm:py-20 bg-white">
+    <section className="py-16 sm:py-20 bg-white/5 backdrop-blur-sm relative">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="text-center mb-12 sm:mb-16">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-4 px-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 px-4">
             파티 준비의 모든 것을 한 곳에서
           </h2>
-          <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto px-4">
+          <p className="text-lg sm:text-xl text-white/80 max-w-2xl mx-auto px-4">
             복잡한 파티 준비 과정을 간단하고 즐겁게 만드는 스마트한 기능들
           </p>
         </div>
@@ -108,15 +108,15 @@ const FeaturesSection: React.FC = () => {
           {features.map((feature, index) => (
             <div 
               key={index}
-              className="p-6 sm:p-8 bg-gray-50 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 group"
+              className="p-6 sm:p-8 bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:-translate-y-2 group border border-white/20 hover:border-white/30"
             >
               <div className="mb-4 sm:mb-6 transform group-hover:scale-110 transition-transform duration-300">
                 {feature.icon}
               </div>
-              <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 text-gray-800">
+              <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 text-white">
                 {feature.title}
               </h3>
-              <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+              <p className="text-sm sm:text-base text-white/80 leading-relaxed">
                 {feature.description}
               </p>
             </div>

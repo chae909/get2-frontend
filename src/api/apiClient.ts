@@ -8,7 +8,7 @@ import axios from 'axios';
 
 // 백엔드 API의 기본 주소를 설정합니다.
 // 이렇게 해두면 나중에 API 주소가 변경되었을 때 이 파일만 수정하면 됩니다.
-const API_BASE_URL = 'http://localhost:8000/api/v1';
+const API_BASE_URL = 'https://get2-backend.onrender.com/api/v1';
 
 // axios 인스턴스 생성
 const apiClient = axios.create({

@@ -36,13 +36,13 @@ const StepsSection: React.FC<StepsSectionProps> = ({ onGetStarted }) => {
   ];
 
   return (
-    <section className="py-16 sm:py-20 bg-gradient-to-br from-purple-50 to-pink-50">
+    <section className="py-16 sm:py-20 bg-white/5 backdrop-blur-sm relative">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="text-center mb-12 sm:mb-16">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-4 px-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 px-4">
             단 4단계로 완성되는 완벽한 파티
           </h2>
-          <p className="text-lg sm:text-xl text-gray-600 px-4">
+          <p className="text-lg sm:text-xl text-white/80 px-4">
             복잡했던 파티 준비가 이렇게 간단해질 줄 몰랐을 거예요
           </p>
         </div>
@@ -52,17 +52,17 @@ const StepsSection: React.FC<StepsSectionProps> = ({ onGetStarted }) => {
             {steps.map((step, index) => (
               <div 
                 key={index}
-                className="text-center px-4"
+                className="text-center px-4 p-6 bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:-translate-y-2"
               >
                 <div className="relative mb-6">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-xl sm:text-2xl font-bold shadow-lg mx-auto animate-bounce">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-yellow-400 to-pink-500 rounded-full flex items-center justify-center text-white text-xl sm:text-2xl font-bold shadow-lg mx-auto animate-bounce">
                     {step.step}
                   </div>
                 </div>
-                <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 text-gray-800">
+                <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 text-white">
                   {step.title}
                 </h3>
-                <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+                <p className="text-sm sm:text-base text-white/80 leading-relaxed">
                   {step.description}
                 </p>
               </div>
@@ -73,7 +73,7 @@ const StepsSection: React.FC<StepsSectionProps> = ({ onGetStarted }) => {
         <div className="text-center mt-12 sm:mt-16 px-4">
           <button 
             onClick={onGetStarted}
-            className="w-full sm:w-auto bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-4 px-8 rounded-full shadow-lg transition-all transform hover:scale-105"
+            className="w-full sm:w-auto bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-bold py-4 px-8 rounded-full shadow-lg transition-all transform hover:scale-105"
           >
             지금 바로 시작해보기
           </button>

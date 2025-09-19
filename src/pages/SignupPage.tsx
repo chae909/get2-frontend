@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button, Input, Card, CardHeader, CardContent, CardTitle } from '../components/ui';
 import { useAuth } from '../contexts/AuthContext';
 import type { RegisterUserData } from '../types';
@@ -59,6 +60,7 @@ interface SignupPageProps {
 
 const SignupPage: React.FC<SignupPageProps> = ({ onBack, onLogin }) => {
   const { register } = useAuth();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -143,7 +145,7 @@ const SignupPage: React.FC<SignupPageProps> = ({ onBack, onLogin }) => {
       alert('회원가입이 완료되었습니다! 로그인 페이지로 이동합니다.');
       
       // 로그인 페이지로 이동
-      onLogin();
+      navigate('/login');
       
       // 자동 로그인은 일시적으로 비활성화 (로그인 API 문제 해결 후 활성화)
       // await login({ 

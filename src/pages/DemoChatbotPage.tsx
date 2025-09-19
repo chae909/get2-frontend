@@ -113,19 +113,19 @@ const QuickStartOptions: React.FC<{ onSelect: (option: string) => void }> = ({ o
 
   return (
     <div className="space-y-3 animate-fade-in">
-      <p className="text-center text-gray-600 mb-4">어떤 파티를 계획하고 계신가요?</p>
+      <p className="text-center text-white/90 mb-4">어떤 파티를 계획하고 계신가요?</p>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {options.map((option, index) => (
           <button
             key={index}
             onClick={() => onSelect(option.text)}
-            className="p-4 bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl text-left hover:shadow-md transition-all duration-300 group border border-purple-100"
+            className="p-4 bg-white/10 backdrop-blur-lg rounded-xl text-left hover:bg-white/20 transition-all duration-300 group border border-white/20 hover:border-white/30"
           >
             <div className="flex items-center space-x-3">
               <span className="text-2xl group-hover:scale-110 transition-transform">{option.emoji}</span>
               <div>
-                <p className="font-semibold text-gray-800">{option.text}</p>
-                <p className="text-sm text-gray-500">{option.description}</p>
+                <p className="font-semibold text-white">{option.text}</p>
+                <p className="text-sm text-white/80">{option.description}</p>
               </div>
             </div>
           </button>
@@ -174,7 +174,7 @@ const MessageInput: React.FC<{
   };
 
   return (
-    <div className="flex items-center space-x-2 sm:space-x-3 p-3 sm:p-4 bg-white border-t border-gray-200">
+    <div className="flex items-center space-x-2 sm:space-x-3 p-3 sm:p-4">
       <div className="flex-1 relative">
         <input
           type="text"
@@ -183,7 +183,7 @@ const MessageInput: React.FC<{
           onKeyPress={handleKeyPress}
           placeholder={placeholder}
           disabled={disabled}
-          className="w-full px-4 py-3 bg-gray-50 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm sm:text-base disabled:opacity-50"
+          className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white/40 text-sm sm:text-base disabled:opacity-50 text-white placeholder-white/60"
         />
       </div>
       <button
@@ -215,14 +215,12 @@ const ChatbotPage: React.FC<ChatbotPageProps> = ({ onBack }) => {
     { id: 'mood', text: '원하는 분위기를 골라주세요', type: 'select', options: ['#활기찬', '#아늑한', '#럭셔리', '#캐주얼', '#테마파티'] }
   ];
 
-  useEffect(() => {
-    // 새 메시지가 추가될 때마다 자동으로 스크롤 (단, 초기 메시지는 제외)
-    if (messages.length > 1) {
-      setTimeout(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-      }, 200);
-    }
-  }, [messages]);
+  // 사용자가 메시지를 보낼 때만 스크롤
+  const scrollToBottomOnUserMessage = () => {
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 300);
+  };
 
   useEffect(() => {
     // Initial bot message
@@ -264,6 +262,9 @@ const ChatbotPage: React.FC<ChatbotPageProps> = ({ onBack }) => {
     setShowQuickStart(false);
     addMessage(option, 'user');
     
+    // 옵션 선택 후 스크롤
+    scrollToBottomOnUserMessage();
+    
     // Add typing indicator
     setTimeout(() => {
       addTypingMessage();
@@ -290,6 +291,9 @@ const ChatbotPage: React.FC<ChatbotPageProps> = ({ onBack }) => {
     addMessage(inputValue, 'user');
     const userInput = inputValue;
     setInputValue('');
+    
+    // 사용자 메시지 전송 후 스크롤
+    scrollToBottomOnUserMessage();
 
     // Add typing indicator
     setTimeout(() => {
@@ -334,29 +338,52 @@ const ChatbotPage: React.FC<ChatbotPageProps> = ({ onBack }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-purple-500 via-pink-400 to-purple-600 flex flex-col relative overflow-hidden">
       <DynamicStyles />
       
+      {/* 정적 배경 */}
+      <div className="absolute inset-0 w-full h-full overflow-hidden" aria-hidden="true">
+        <svg width="100%" height="100%" preserveAspectRatio="xMidYMid slice" className="pointer-events-none">
+          <defs>
+            <radialGradient id="demoChatGrad1" cx="25%" cy="25%" r="45%">
+              <stop offset="0%" style={{stopColor: 'rgba(139, 92, 246, 0.2)', stopOpacity:1}} />
+              <stop offset="100%" style={{stopColor: 'rgba(139, 92, 246, 0)', stopOpacity:0}} />
+            </radialGradient>
+            <radialGradient id="demoChatGrad2" cx="75%" cy="75%" r="55%">
+              <stop offset="0%" style={{stopColor: 'rgba(236, 72, 153, 0.15)', stopOpacity:1}} />
+              <stop offset="100%" style={{stopColor: 'rgba(236, 72, 153, 0)', stopOpacity:0}} />
+            </radialGradient>
+          </defs>
+          
+          <circle cx="25%" cy="25%" r="220" fill="url(#demoChatGrad1)" />
+          <circle cx="75%" cy="75%" r="280" fill="url(#demoChatGrad2)" />
+        </svg>
+      </div>
+      
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200 fixed top-0 left-0 right-0 z-10">
+      <header className="bg-white/10 backdrop-blur-lg border-b border-white/20 sticky top-0 z-10">
         <div className="container mx-auto px-4 py-3 sm:py-4 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <button
               onClick={onBack || (() => navigate('/'))}
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors sm:hidden"
+              className="p-2 hover:bg-white/10 rounded-full transition-colors sm:hidden"
             >
-              <ArrowLeftIcon className="w-5 h-5 text-gray-600 " />
+              <ArrowLeftIcon className="w-5 h-5 text-white" />
             </button>
             <div className="flex items-center space-x-2 sm:space-x-3">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
                 <PartyPopperIcon className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="font-bold text-lg sm:text-xl text-white">데모 파티 플래너</h1>
+                <p className="text-xs sm:text-sm text-white/80">기능을 미리 체험해보세요</p>
               </div>
             </div>
           </div>
           
           <button
             onClick={onBack || (() => navigate('/'))}
-            className="hidden sm:flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-purple-600 transition-colors"
+            className="hidden sm:flex items-center space-x-2 px-4 py-2 text-white hover:text-white/80 transition-colors"
           >
             <ArrowLeftIcon className="w-4 h-4" />
             <span>돌아가기</span>
@@ -365,15 +392,15 @@ const ChatbotPage: React.FC<ChatbotPageProps> = ({ onBack }) => {
       </header>
 
       {/* Chat Area */}
-      <div className="flex-1 flex flex-col mt-16 sm:mt-20">
+      <div className="flex-1 flex flex-col min-h-0">
         <div className="flex-1 overflow-y-auto p-4 sm:p-6">
-          <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
+          <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 pb-4">
             {messages.map((message) => (
               <MessageBubble key={message.id} message={message} />
             ))}
             
             {showQuickStart && (
-              <div className="animate-slide-up">
+              <div>
                 <QuickStartOptions onSelect={handleQuickStart} />
               </div>
             )}
@@ -383,7 +410,7 @@ const ChatbotPage: React.FC<ChatbotPageProps> = ({ onBack }) => {
         </div>
 
         {/* Input Area */}
-        <div className="bg-white border-t border-gray-200">
+        <div className="bg-white/10 backdrop-blur-lg border-t border-white/20 flex-shrink-0">
           <div className="max-w-4xl mx-auto">
             <MessageInput
               value={inputValue}

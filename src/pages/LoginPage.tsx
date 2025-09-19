@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button, Input, Card, CardHeader, CardContent, CardTitle } from '../components/ui';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -40,6 +41,7 @@ interface LoginPageProps {
 
 const LoginPage: React.FC<LoginPageProps> = ({ onBack, onSignup }) => {
   const { login } = useAuth();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -90,11 +92,8 @@ const LoginPage: React.FC<LoginPageProps> = ({ onBack, onSignup }) => {
         password: formData.password
       });
       
-      // 로그인 성공 메시지
-      alert('로그인이 성공했습니다!');
-      
-      // 성공 시 대시보드로 리디렉션 또는 다른 처리
-      // 예: window.location.href = '/dashboard';
+      // 로그인 성공 시 대시보드로 이동
+      navigate('/dashboard');
       
     } catch (error: any) {
       console.error('Login error:', error);

@@ -10,6 +10,7 @@ import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import Dashboard from './pages/Dashboard';
+import MyPage from './pages/MyPage';
 import ChatbotPage from './pages/ChatbotPage';
 import DemoChatbotPage from './pages/DemoChatbotPage';
 // 헤더, 푸터 등 공통 레이아웃 컴포넌트
@@ -29,8 +30,8 @@ function App() {
     return <div className="flex justify-center items-center min-h-screen">로딩 중...</div>;
   }
   
-  // 로그인/회원가입/대시보드 페이지가 아닐 때만 헤더와 푸터를 보여주기 위한 조건
-  const showHeaderFooter = !['/login', '/signup', '/dashboard'].includes(location.pathname);
+  // 로그인/회원가입 페이지가 아닐 때만 헤더와 푸터를 보여주기 위한 조건
+  const showHeaderFooter = !['/login', '/signup'].includes(location.pathname);
 
   // 챗봇 페이지로 이동
   const handleStartChatbot = () => {
@@ -104,6 +105,15 @@ function App() {
             element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route
+            path="/mypage"
+            element={
+              <ProtectedRoute>
+                <MyPage />
               </ProtectedRoute>
             }
           />
