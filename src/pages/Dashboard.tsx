@@ -3,13 +3,13 @@
 
 import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { Heart, Users, Calendar, ArrowRight } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
   // useAuth 훅을 사용해 현재 로그인된 사용자 정보와 로그아웃 함수를 가져옵니다.
   const { user } = useAuth();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handlePlanRequest = (type: string) => {
     // 추후 플랜 요청 페이지로 이동 로직 구현
