@@ -27,3 +27,53 @@ export interface RegisterUserData extends LoginCredentials {
     nickname: string;
     password_confirm: string;
 }
+
+/**
+ * 채팅 메시지 타입
+ */
+export interface ChatMessage {
+  id: string;
+  type: 'bot' | 'user';
+  content: string;
+  timestamp: Date;
+  isTyping?: boolean;
+  metadata?: {
+    intent?: string;
+    confidence?: number;
+    suggestions?: string[];
+  };
+}
+
+/**
+ * 파티 질문 타입
+ */
+export interface Question {
+  id: string;
+  text: string;
+  type: 'text' | 'select' | 'checkbox' | 'date' | 'number';
+  options?: string[];
+  placeholder?: string;
+}
+
+/**
+ * 사용자 파티 선호도 타입
+ */
+export interface PartyPreferences {
+  party_type?: string;
+  attendees?: number;
+  date?: string;
+  budget?: string;
+  location?: string;
+  mood?: string;
+  [key: string]: any;
+}
+
+/**
+ * 대화 컨텍스트 타입
+ */
+export interface ConversationContext {
+  conversation_id?: string;
+  current_step?: number;
+  preferences?: PartyPreferences;
+  message_history?: ChatMessage[];
+}

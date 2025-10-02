@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { sendChatMessage, startConversation, planParty } from '../api/ai';
+import type { ChatRequest, PartyPlanRequest } from '../api/ai';
+import type { ChatMessage, ConversationContext } from '../types';
 
 // Dynamic Styles
 const DynamicStyles = () => (
@@ -82,21 +85,6 @@ const ArrowLeftIcon = ({ className }: { className?: string }) => (
 );
 
 // Types
-interface Message {
-  id: string;
-  type: 'bot' | 'user';
-  content: string;
-  timestamp: Date;
-  isTyping?: boolean;
-}
-
-interface Question {
-  id: string;
-  text: string;
-  type: 'text' | 'select' | 'checkbox' | 'date' | 'number';
-  options?: string[];
-  placeholder?: string;
-}
 
 interface ChatbotPageProps {
   onBack?: () => void;
@@ -136,7 +124,7 @@ const QuickStartOptions: React.FC<{ onSelect: (option: string) => void }> = ({ o
 };
 
 // Message Component
-const MessageBubble: React.FC<{ message: Message }> = ({ message }) => {
+const MessageBubble: React.FC<{ message: ChatMessage }> = ({ message }) => {
   const isBot = message.type === 'bot';
   
   return (
@@ -200,19 +188,23 @@ const MessageInput: React.FC<{
 // Main Chatbot Page Component
 const ChatbotPage: React.FC<ChatbotPageProps> = ({ onBack }) => {
   const navigate = useNavigate();
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [currentStep, setCurrentStep] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [conversationContext, setConversationContext] = useState<ConversationContext>({});
   const [showQuickStart, setShowQuickStart] = useState(true);
+  const [partyPlanStep, setPartyPlanStep] = useState(0); // 파티 플래닝 진행 단계
+  const [collectedPartyInfo, setCollectedPartyInfo] = useState<Record<string, any>>({}); // 수집된 파티 정보
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const partyQuestions: Question[] = [
-    { id: 'attendees', text: '몇 명 정도 모이실 예정인가요?', type: 'number', placeholder: '예: 10명' },
-    { id: 'date', text: '파티 날짜는 언제로 생각하고 계신가요?', type: 'date' },
-    { id: 'budget', text: '예산은 어느 정도로 생각하세요?', type: 'select', options: ['상관없음', '인당 5만원 이하', '인당 10만원 이하', '인당 15만원 이하'] },
-    { id: 'location', text: '어느 지역을 선호하시나요?', type: 'text', placeholder: '예: 강남구, 홍대 등' },
-    { id: 'mood', text: '원하는 분위기를 골라주세요', type: 'select', options: ['#활기찬', '#아늑한', '#럭셔리', '#캐주얼', '#테마파티'] }
+  // 파티 플래닝 질문들
+  const partyQuestions = [
+    { key: 'attendees', question: '몇 명 정도 모이실 예정인가요?', type: 'number' },
+    { key: 'budget', question: '예산은 어느 정도로 생각하세요?', type: 'text' },
+    { key: 'location', question: '어느 지역을 선호하시나요?', type: 'text' },
+    { key: 'date', question: '파티 날짜는 언제로 생각하고 계신가요?', type: 'text' },
+    { key: 'mood', question: '원하는 분위기나 특별한 요구사항이 있다면 알려주세요!', type: 'text' }
   ];
 
   // 사용자가 메시지를 보낼 때만 스크롤
@@ -223,28 +215,54 @@ const ChatbotPage: React.FC<ChatbotPageProps> = ({ onBack }) => {
   };
 
   useEffect(() => {
-    // Initial bot message
-    const initialMessage: Message = {
-      id: '1',
-      type: 'bot',
-      content: '안녕하세요! 저는 파티 플래닝 AI 어시스턴트예요. 완벽한 파티를 함께 계획해보아요! ✨',
-      timestamp: new Date()
+    // Initialize conversation
+    const initializeConversation = async () => {
+      try {
+        const conversation = await startConversation();
+        setConversationContext(prev => ({
+          ...prev,
+          conversation_id: conversation.conversation_id
+        }));
+        
+        // Initial bot message
+        const initialMessage: ChatMessage = {
+          id: '1',
+          type: 'bot',
+          content: '안녕하세요! 저는 파티 플래닝 AI 어시스턴트예요. 완벽한 파티를 함께 계획해보아요! ✨',
+          timestamp: new Date()
+        };
+        setMessages([initialMessage]);
+      } catch (error) {
+        console.error('Failed to initialize conversation:', error);
+        
+        // Fallback to local message if API fails
+        const initialMessage: ChatMessage = {
+          id: '1',
+          type: 'bot',
+          content: '안녕하세요! 저는 파티 플래닝 AI 어시스턴트예요. 완벽한 파티를 함께 계획해보아요! ✨',
+          timestamp: new Date()
+        };
+        setMessages([initialMessage]);
+      }
     };
-    setMessages([initialMessage]);
+    
+    initializeConversation();
   }, []);
 
-  const addMessage = (content: string, type: 'bot' | 'user') => {
-    const newMessage: Message = {
+  const addMessage = (content: string, type: 'bot' | 'user', metadata?: any) => {
+    const newMessage: ChatMessage = {
       id: Date.now().toString(),
       type,
       content,
-      timestamp: new Date()
+      timestamp: new Date(),
+      metadata
     };
     setMessages(prev => [...prev, newMessage]);
+    return newMessage;
   };
 
   const addTypingMessage = () => {
-    const typingMessage: Message = {
+    const typingMessage: ChatMessage = {
       id: 'typing',
       type: 'bot',
       content: '',
@@ -258,9 +276,113 @@ const ChatbotPage: React.FC<ChatbotPageProps> = ({ onBack }) => {
     setMessages(prev => prev.filter(msg => msg.id !== 'typing'));
   };
 
+  // 백엔드 AI 서비스와 통신하는 함수
+  const sendMessageToAI = async (userMessage: string, userContext?: any) => {
+    try {
+      setIsLoading(true);
+      
+      const chatRequest: ChatRequest = {
+        message: userMessage,
+        conversation_history: messages.map(msg => ({
+          role: msg.type === 'user' ? 'user' : 'assistant',
+          content: msg.content,
+          timestamp: msg.timestamp.toISOString()
+        })),
+        user_context: {
+          ...conversationContext.preferences,
+          ...userContext
+        }
+      };
+      
+      const response = await sendChatMessage(chatRequest);
+      
+      // Update conversation context
+      if (response.conversation_id) {
+        setConversationContext(prev => ({
+          ...prev,
+          conversation_id: response.conversation_id
+        }));
+      }
+      
+      return response;
+    } catch (error: any) {
+      console.error('AI API error:', error);
+      
+      // 백엔드 API가 아직 준비되지 않은 경우를 위한 상세한 폴백 응답
+      const fallbackResponses = {
+        '생일파티': '생일파티를 계획해주셔서 기쁩니다! 특별한 날을 위해 몇 가지 질문을 드려볼게요. 먼저 몇 명 정도 모이실 예정인가요?',
+        '회사파티': '회사 파티 계획이시군요! 팀원들과 즐거운 시간을 보내실 수 있도록 도와드리겠습니다. 참석 예정 인원이 몇 명 정도인가요?',
+        '졸업파티': '졸업을 축하드립니다! 🎓 의미있는 졸업 파티를 만들어보아요. 어떤 분위기의 파티를 원하시나요?',
+        '기념일파티': '특별한 기념일이시군요! ✨ 어떤 기념일인지 알려주시면 더 맞춤형 제안을 드릴 수 있어요.',
+        default: '현재 서버 연결에 문제가 있어 임시로 로컬 모드로 동작합니다. 기본적인 파티 계획 도움을 드릴 수 있어요. 어떤 파티를 계획하고 계신가요?'
+      };
+      
+      const fallbackResponse = fallbackResponses[userMessage as keyof typeof fallbackResponses] || fallbackResponses.default;
+      
+      return {
+        response: fallbackResponse,
+        suggestions: ['예산 문의', '장소 추천', '음식 메뉴', '일정 계획']
+      };
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // 파티 플래닝 전용 API 호출 함수
+  const callPartyPlanAPI = async (partyData: Record<string, any>) => {
+    try {
+      setIsLoading(true);
+      
+      const planRequest: PartyPlanRequest = {
+        party_type: partyData.party_type || '일반파티',
+        attendees: partyData.attendees ? parseInt(partyData.attendees) : undefined,
+        budget: partyData.budget,
+        location: partyData.location,
+        date: partyData.date,
+        mood: partyData.mood,
+        special_requirements: partyData.special_requirements
+      };
+      
+      const response = await planParty(planRequest);
+      return response;
+    } catch (error: any) {
+      console.error('Party planning API error:', error);
+      
+      // 폴백 응답
+      return {
+        party_plan: {
+          title: `${partyData.party_type || '맞춤형'} 파티 플랜`,
+          description: '수집된 정보를 바탕으로 기본 파티 플랜을 제안드립니다.',
+          recommendations: [
+            `참석 인원: ${partyData.attendees}명에 적합한 장소 추천`,
+            `예산: ${partyData.budget}에 맞는 메뉴 구성`,
+            `위치: ${partyData.location} 지역의 인기 장소들`,
+            `분위기: ${partyData.mood} 컨셉에 어울리는 데코레이션`
+          ]
+        },
+        message: '파티 플랜이 완성되었습니다! 위의 추천사항을 참고해보세요. 🎉'
+      };
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleQuickStart = async (option: string) => {
     setShowQuickStart(false);
     addMessage(option, 'user');
+    
+    // Update preferences
+    setConversationContext(prev => ({
+      ...prev,
+      preferences: {
+        ...prev.preferences,
+        party_type: option
+      }
+    }));
+    
+    // 파티 정보 수집 시작
+    setCollectedPartyInfo({ party_type: option });
+    setPartyPlanStep(1);
     
     // 옵션 선택 후 스크롤
     scrollToBottomOnUserMessage();
@@ -271,25 +393,28 @@ const ChatbotPage: React.FC<ChatbotPageProps> = ({ onBack }) => {
       setIsTyping(true);
     }, 300);
 
-    // Bot response after delay
+    // Bot response with first question
     setTimeout(() => {
       removeTypingMessage();
-      addMessage(`${option}를 선택해주셨군요! 멋진 파티를 만들어보아요. 몇 가지 질문을 통해 완벽한 플랜을 짜드릴게요.`, 'bot');
-      setIsTyping(false);
       
-      // Ask first question
+      addMessage(`${option}를 선택해주셨군요! 멋진 파티를 만들어보아요. 🎉`, 'bot');
+      
+      // 첫 번째 질문 시작
       setTimeout(() => {
-        addMessage(partyQuestions[0].text, 'bot');
-        setCurrentStep(1);
+        if (partyQuestions.length > 0) {
+          addMessage(partyQuestions[0].question, 'bot');
+        }
       }, 1000);
-    }, 1500);
+      
+      setIsTyping(false);
+    }, 1000);
   };
 
   const handleSendMessage = async () => {
-    if (!inputValue.trim() || isTyping) return;
+    if (!inputValue.trim() || isTyping || isLoading) return;
 
-    addMessage(inputValue, 'user');
     const userInput = inputValue;
+    addMessage(userInput, 'user');
     setInputValue('');
     
     // 사용자 메시지 전송 후 스크롤
@@ -301,40 +426,66 @@ const ChatbotPage: React.FC<ChatbotPageProps> = ({ onBack }) => {
       setIsTyping(true);
     }, 300);
 
-    // Generate bot response
-    setTimeout(() => {
+    // 파티 플래닝 단계에 따른 처리
+    setTimeout(async () => {
       removeTypingMessage();
       
-      if (currentStep < partyQuestions.length && currentStep > 0) {
-        // Continue with questions
-        addMessage(`${userInput} 좋네요!`, 'bot');
+      if (partyPlanStep > 0 && partyPlanStep <= partyQuestions.length) {
+        // 파티 정보 수집 중
+        const currentQuestion = partyQuestions[partyPlanStep - 1];
+        const updatedInfo = {
+          ...collectedPartyInfo,
+          [currentQuestion.key]: userInput
+        };
+        setCollectedPartyInfo(updatedInfo);
         
-        setTimeout(() => {
-          if (currentStep < partyQuestions.length) {
-            addMessage(partyQuestions[currentStep].text, 'bot');
-            setCurrentStep(prev => prev + 1);
-          } else {
-            // All questions completed
-            addMessage('모든 정보를 받았어요! 최고의 파티 플랜을 생성하고 있습니다. 잠시만 기다려주세요... ✨', 'bot');
+        if (partyPlanStep < partyQuestions.length) {
+          // 다음 질문
+          addMessage('좋네요! 👍', 'bot');
+          setTimeout(() => {
+            const nextQuestion = partyQuestions[partyPlanStep];
+            addMessage(nextQuestion.question, 'bot');
+            setPartyPlanStep(prev => prev + 1);
+          }, 1000);
+        } else {
+          // 모든 질문 완료 - 파티 플래닝 API 호출
+          addMessage('모든 정보를 받았어요! 최고의 파티 플랜을 생성하고 있습니다... ✨', 'bot');
+          
+          try {
+            const partyPlan = await callPartyPlanAPI(updatedInfo);
+            
             setTimeout(() => {
-              addMessage('완성되었습니다! 맞춤형 파티 플랜을 확인해보세요. 🎉', 'bot');
-            }, 3000);
+              if (partyPlan.party_plan) {
+                addMessage(`🎉 ${partyPlan.party_plan.title}\n\n${partyPlan.party_plan.description}\n\n추천사항:\n${partyPlan.party_plan.recommendations.join('\n')}`, 'bot');
+              } else {
+                addMessage(partyPlan.message || '완성되었습니다! 맞춤형 파티 플랜을 확인해보세요. 🎉', 'bot');
+              }
+              setPartyPlanStep(0); // 플래닝 완료
+            }, 2000);
+          } catch (error) {
+            setTimeout(() => {
+              addMessage('파티 플랜 생성 중 오류가 발생했습니다. 다시 시도해주세요.', 'bot');
+              setPartyPlanStep(0);
+            }, 1000);
           }
-        }, 1000);
+        }
       } else {
-        // General conversation
-        const responses = [
-          '네, 더 자세히 알려주세요!',
-          '흥미롭네요! 어떤 도움이 필요하신가요?',
-          '파티 계획에 대해 더 구체적으로 말씀해주시면 더 좋은 제안을 드릴 수 있어요.',
-          '좋은 아이디어네요! 함께 계획해보아요.'
-        ];
-        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-        addMessage(randomResponse, 'bot');
+        // 일반 대화 - 기본 AI API 사용
+        try {
+          const response = await sendMessageToAI(userInput);
+          addMessage(response.response, 'bot', {
+            suggestions: response.suggestions,
+            intent: response.metadata?.intent,
+            party_recommendations: response.metadata?.party_recommendations
+          });
+        } catch (error) {
+          console.error('Failed to send message:', error);
+          addMessage('죄송합니다. 메시지 처리 중 오류가 발생했습니다. 다시 시도해주세요.', 'bot');
+        }
       }
       
       setIsTyping(false);
-    }, 1500);
+    }, 1000);
   };
 
   return (
@@ -416,7 +567,7 @@ const ChatbotPage: React.FC<ChatbotPageProps> = ({ onBack }) => {
               value={inputValue}
               onChange={setInputValue}
               onSend={handleSendMessage}
-              disabled={isTyping}
+              disabled={isTyping || isLoading}
               placeholder={showQuickStart ? "또는 직접 입력해보세요..." : "메시지를 입력하세요..."}
             />
           </div>
