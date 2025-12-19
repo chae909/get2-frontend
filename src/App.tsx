@@ -12,7 +12,6 @@ import SignupPage from './pages/SignupPage';
 import Dashboard from './pages/Dashboard';
 import MyPage from './pages/MyPage';
 import ChatbotPage from './pages/ChatbotPage';
-import DemoChatbotPage from './pages/DemoChatbotPage';
 // 헤더, 푸터 등 공통 레이아웃 컴포넌트
 import Header from './components/Header'; 
 import Footer from './components/Footer';
@@ -38,16 +37,6 @@ function App() {
     navigate('/chatbot');
   };
 
-  // 데모 챗봇 페이지로 이동
-  const handleDemo = () => {
-    navigate('/demo-chatbot');
-  };
-
-  // 회원가입 페이지로 이동
-  const handleGetStarted = () => {
-    navigate('/signup');
-  };
-
   return (
     <div className="min-h-screen bg-white font-sans flex flex-col">
       {showHeaderFooter && (
@@ -61,15 +50,8 @@ function App() {
       <main className="flex-grow">
         <Routes>
           {/* Public Routes - 로그인 여부와 상관없이 접근 가능한 페이지 */}
-          <Route path="/" element={
-            <LandingPage 
-              onStartChatbot={handleStartChatbot}
-              onDemo={handleDemo}
-              onGetStarted={handleGetStarted}
-            />
-          } />
+          <Route path="/" element={<LandingPage />} />
           <Route path="/chatbot" element={<ChatbotPage onBack={() => navigate('/')} />} />
-          <Route path="/demo-chatbot" element={<DemoChatbotPage onBack={() => navigate('/')} />} />
           
           {/* 로그인한 상태에서 /login 또는 /signup 접근 시 대시보드로 리디렉션 */}
           <Route 

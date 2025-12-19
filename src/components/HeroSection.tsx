@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // Hero Section Component
-interface HeroSectionProps {
-  onGetStarted?: () => void;
-  onDemo?: () => void;
-}
-
-const HeroSection: React.FC<HeroSectionProps> = ({ onGetStarted, onDemo }) => {
+const HeroSection: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsVisible(true);
@@ -48,17 +45,12 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onGetStarted, onDemo }) => {
           <br className="hidden md:block" />
           완벽한 파티를 위한 모든 것
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <div className="flex justify-center">
           <button 
-            onClick={onGetStarted}
-            className="w-full sm:w-auto bg-gray-800 hover:bg-gray-900 text-white font-semibold py-4 px-12 rounded-full transition-all transform hover:scale-105 shadow-md"
+            onClick={() => navigate('/signup')}
+            className="bg-gray-800 hover:bg-gray-900 text-white font-semibold py-4 px-12 rounded-full transition-all transform hover:scale-105 shadow-md"
           >
             무료로 시작하기
-          </button>
-          <button 
-            onClick={onDemo}
-            className="w-full sm:w-auto bg-white hover:bg-gray-50 text-gray-800 font-semibold py-4 px-12 rounded-full transition-all transform hover:scale-105 border-2 border-gray-800 hover:border-gray-900">
-            데모 보기
           </button>
         </div>
       </div>
