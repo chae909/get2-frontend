@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 // Icons
 const SparklesIcon = ({ className }: { className?: string }) => (
@@ -59,64 +59,102 @@ interface Feature {
 }
 
 const FeaturesSection: React.FC = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
+  }, []);
+
   const features: Feature[] = [
     {
-      icon: <SparklesIcon className="w-12 h-12 text-purple-400" />,
+      icon: <SparklesIcon className="w-14 h-14 text-black" />,
       title: "AI 맞춤 기획",
       description: "테마, 예산, 인원에 맞춘 완벽한 파티 플랜을 AI가 자동으로 생성합니다"
     },
     {
-      icon: <CalendarIcon className="w-12 h-12 text-purple-400" />,
+      icon: <CalendarIcon className="w-14 h-14 text-black" />,
       title: "일정 관리",
       description: "준비 단계별 체크리스트와 타임라인으로 체계적인 파티 준비가 가능합니다"
     },
     {
-      icon: <UsersIcon className="w-12 h-12 text-purple-400" />,
+      icon: <UsersIcon className="w-14 h-14 text-black" />,
       title: "게스트 관리",
       description: "초대장 발송부터 RSVP 관리, 참석자 현황까지 한 번에 관리하세요"
     },
     {
-      icon: <MapPinIcon className="w-12 h-12 text-purple-400" />,
+      icon: <MapPinIcon className="w-14 h-14 text-black" />,
       title: "장소 추천",
       description: "파티 규모와 테마에 맞는 최적의 장소를 데이터 기반으로 추천합니다"
     },
     {
-      icon: <MusicIcon className="w-12 h-12 text-purple-400" />,
+      icon: <MusicIcon className="w-14 h-14 text-black" />,
       title: "엔터테인먼트",
       description: "음악, 게임, 액티비티까지 파티를 더욱 특별하게 만드는 요소들을 제안합니다"
     },
     {
-      icon: <PartyPopperIcon className="w-12 h-12 text-purple-400" />,
+      icon: <PartyPopperIcon className="w-14 h-14 text-black" />,
       title: "실시간 지원",
       description: "파티 당일 실시간 지원으로 예상치 못한 상황에도 완벽하게 대응합니다"
     }
   ];
 
   return (
-    <section className="py-16 sm:py-20 bg-white/5 backdrop-blur-sm relative">
-      <div className="container mx-auto px-4 sm:px-6">
-        <div className="text-center mb-12 sm:mb-16">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 px-4">
+    <section ref={sectionRef} className="py-16 bg-gradient-to-b from-blue-50 to-purple-50 relative overflow-hidden">
+      {/* 배경 장식 */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-br from-purple-200 to-pink-200 rounded-full blur-3xl opacity-20"></div>
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gradient-to-br from-blue-200 to-cyan-200 rounded-full blur-3xl opacity-25"></div>
+        <div className="absolute top-1/2 right-1/3 w-64 h-64 bg-gradient-to-br from-indigo-200 to-violet-200 rounded-full blur-2xl opacity-15"></div>
+      </div>
+      
+      <div className="container mx-auto px-6 max-w-6xl relative z-10">
+        <div className={`text-center mb-12 transition-all duration-1000 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}>
+          <h2 className="text-2xl md:text-3xl font-extrabold text-black mb-4 px-4 leading-relaxed md:leading-relaxed">
             파티 준비의 모든 것을 한 곳에서
           </h2>
-          <p className="text-lg sm:text-xl text-white/80 max-w-2xl mx-auto px-4">
+          <p className="text-base text-gray-600 max-w-2xl mx-auto px-4 leading-relaxed">
             복잡한 파티 준비 과정을 간단하고 즐겁게 만드는 스마트한 기능들
           </p>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature, index) => (
             <div 
               key={index}
-              className="p-6 sm:p-8 bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:-translate-y-2 group border border-white/20 hover:border-white/30"
+              className={`p-8 bg-white rounded-3xl hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1 group border border-gray-200 ${
+                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+              }`}
+              style={{ transitionDelay: `${index * 100}ms` }}
             >
-              <div className="mb-4 sm:mb-6 transform group-hover:scale-110 transition-transform duration-300">
+              <div className="mb-6 transform group-hover:scale-110 transition-transform duration-300">
                 {feature.icon}
               </div>
-              <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 text-white">
+              <h3 className="text-lg font-bold mb-3 text-black leading-relaxed">
                 {feature.title}
               </h3>
-              <p className="text-sm sm:text-base text-white/80 leading-relaxed">
+              <p className="text-sm text-gray-600 leading-relaxed">
                 {feature.description}
               </p>
             </div>

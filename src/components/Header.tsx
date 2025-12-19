@@ -5,14 +5,9 @@ import { useAuth } from '../contexts/AuthContext';
 import { User } from 'lucide-react';
 
 // Icons
-const PartyPopperIcon = ({ className }: { className?: string }) => (
+const SparklesIcon = ({ className }: { className?: string }) => (
   <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M5.8 11.3 2 22l10.7-3.79" />
-    <path d="m14.2 12.7 7.8-7.8-4-4-7.8 7.8-4 4Z" />
-    <path d="M12.7 20.2 22 11l-4-4-9.3 9.3Z" />
-    <path d="M8.5 2.5 7 4" />
-    <path d="m14 8 3-3" />
-    <path d="M9.5 17.5 8 19" />
+    <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.582a.5.5 0 0 1 0 .963L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>
   </svg>
 );
 
@@ -45,13 +40,13 @@ const Logo: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center space-x-2 sm:space-x-3 cursor-pointer" onClick={handleLogoClick}>
-      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-yellow-400 to-pink-500 rounded-full flex items-center justify-center">
-        <PartyPopperIcon className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
+    <div className="flex items-center space-x-3 sm:space-x-4 cursor-pointer" onClick={handleLogoClick}>
+      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-gray-900 to-gray-700 rounded-2xl flex items-center justify-center shadow-sm">
+        <SparklesIcon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
       </div>
-      <div className="text-white">
-        <div className="font-bold text-lg sm:text-xl">Get2</div>
-        <div className="text-xs opacity-80 hidden sm:block">PLAY YOUR DAY</div>
+      <div className="text-black">
+        <div className="font-extrabold text-lg sm:text-xl leading-relaxed">Get2</div>
+        <div className="text-xs opacity-60 hidden sm:block">PLAY YOUR DAY</div>
       </div>
     </div>
   );
@@ -84,8 +79,8 @@ const Header: React.FC<HeaderProps> = ({ onStartChatbot, onLogin, onSignup }) =>
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/10 backdrop-blur-sm border-b border-white/20">
-      <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100">
+      <div className="container mx-auto px-6 sm:px-8 py-4 sm:py-5 flex justify-between items-center">
         <Logo />
 
         {/* Authenticated User Navigation */}
@@ -95,13 +90,13 @@ const Header: React.FC<HeaderProps> = ({ onStartChatbot, onLogin, onSignup }) =>
             <nav className="hidden lg:flex items-center space-x-6 xl:space-x-8">
               <button
                 onClick={() => navigate('/dashboard')}
-                className="text-white/90 hover:text-white transition-colors text-sm xl:text-base"
+                className="text-gray-700 hover:text-black transition-colors text-sm xl:text-base font-medium"
               >
                 대시보드
               </button>
               <button
                 onClick={onStartChatbot}
-                className="text-white/90 hover:text-white transition-colors text-sm xl:text-base"
+                className="text-gray-700 hover:text-black transition-colors text-sm xl:text-base font-medium"
               >
                 AI 상담
               </button>
@@ -109,7 +104,7 @@ const Header: React.FC<HeaderProps> = ({ onStartChatbot, onLogin, onSignup }) =>
               <div className="flex items-center space-x-3">
                 <button
                   onClick={() => navigate('/mypage')}
-                  className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm text-white font-semibold py-2 px-4 xl:px-6 rounded-full border border-white/30 hover:bg-white/30 transition-all text-sm xl:text-base"
+                  className="flex items-center space-x-2 bg-gray-50 text-black font-semibold py-2 px-4 xl:px-6 rounded-full border border-gray-200 hover:bg-gray-100 transition-all text-sm xl:text-base"
                 >
                   <User className="w-4 h-4" />
                   <span>{user?.nickname || '마이페이지'}</span>
@@ -117,7 +112,7 @@ const Header: React.FC<HeaderProps> = ({ onStartChatbot, onLogin, onSignup }) =>
                 
                 <button 
                   onClick={handleLogout}
-                  className="text-white/90 hover:text-white font-medium transition-colors text-sm xl:text-base"
+                  className="text-gray-700 hover:text-black font-medium transition-colors text-sm xl:text-base"
                 >
                   로그아웃
                 </button>
@@ -145,14 +140,14 @@ const Header: React.FC<HeaderProps> = ({ onStartChatbot, onLogin, onSignup }) =>
           <>
             {/* Desktop Navigation - Unauthenticated */}
             <nav className="hidden lg:flex items-center space-x-6 xl:space-x-8">
-              <a href="#features" className="text-white/90 hover:text-white transition-colors text-sm xl:text-base">기능</a>
-              <a href="#how-it-works" className="text-white/90 hover:text-white transition-colors text-sm xl:text-base">이용방법</a>
-              <a href="#pricing" className="text-white/90 hover:text-white transition-colors text-sm xl:text-base">요금제</a>
+              <a href="#features" className="text-gray-700 hover:text-black transition-colors text-sm xl:text-base font-medium">기능</a>
+              <a href="#how-it-works" className="text-gray-700 hover:text-black transition-colors text-sm xl:text-base font-medium">이용방법</a>
+              <a href="#pricing" className="text-gray-700 hover:text-black transition-colors text-sm xl:text-base font-medium">요금제</a>
               
               <div className="flex items-center space-x-3">
                 <button
                   onClick={onStartChatbot}
-                  className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-semibold py-2 px-4 xl:px-6 rounded-full transition-all transform hover:scale-105 text-sm xl:text-base"
+                  className="bg-black hover:bg-gray-800 text-white font-semibold py-3 px-6 xl:px-8 rounded-full transition-all transform hover:scale-105 text-sm xl:text-base"
                 >
                   AI 상담 시작
                 </button>
@@ -160,7 +155,7 @@ const Header: React.FC<HeaderProps> = ({ onStartChatbot, onLogin, onSignup }) =>
                 {onLogin && (
                   <button 
                     onClick={onLogin}
-                    className="text-white/90 hover:text-white font-medium transition-colors text-sm xl:text-base"
+                    className="text-gray-700 hover:text-black font-medium transition-colors text-sm xl:text-base"
                   >
                     로그인
                   </button>
@@ -169,7 +164,7 @@ const Header: React.FC<HeaderProps> = ({ onStartChatbot, onLogin, onSignup }) =>
                 {onSignup && (
                   <button 
                     onClick={onSignup}
-                    className="bg-white/20 backdrop-blur-sm text-white font-semibold py-2 px-4 xl:px-6 rounded-full border border-white/30 hover:bg-white/30 transition-all text-sm xl:text-base"
+                    className="bg-gray-50 text-black font-semibold py-3 px-6 xl:px-8 rounded-full border border-gray-200 hover:bg-gray-100 transition-all text-sm xl:text-base"
                   >
                     회원가입
                   </button>
@@ -181,7 +176,7 @@ const Header: React.FC<HeaderProps> = ({ onStartChatbot, onLogin, onSignup }) =>
             <nav className="hidden md:flex lg:hidden items-center space-x-4">
               <button
                 onClick={onStartChatbot}
-                className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-semibold py-2 px-4 rounded-full transition-all transform hover:scale-105 text-sm"
+                className="bg-black hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded-full transition-all transform hover:scale-105 text-sm"
               >
                 AI 상담
               </button>
@@ -209,7 +204,7 @@ const Header: React.FC<HeaderProps> = ({ onStartChatbot, onLogin, onSignup }) =>
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden p-2 text-white hover:bg-white/10 rounded-lg transition-colors"
+          className="md:hidden p-2 text-black hover:bg-gray-100 rounded-lg transition-colors"
           onClick={handleMobileMenuToggle}
         >
           {isMobileMenuOpen ? <XIcon className="w-6 h-6" /> : <MenuIcon className="w-6 h-6" />}
@@ -218,7 +213,7 @@ const Header: React.FC<HeaderProps> = ({ onStartChatbot, onLogin, onSignup }) =>
 
       {/* Mobile Navigation */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-white/20 backdrop-blur-lg border-t border-white/20">
+        <div className="md:hidden bg-white border-t border-gray-100">
           <nav className="container mx-auto px-4 py-4 flex flex-col space-y-3">
             {isAuthenticated ? (
               <>
@@ -227,7 +222,7 @@ const Header: React.FC<HeaderProps> = ({ onStartChatbot, onLogin, onSignup }) =>
                     navigate('/dashboard');
                     closeMobileMenu();
                   }}
-                  className="text-white/90 hover:text-white transition-colors py-2 px-2 rounded-lg hover:bg-white/10 text-left"
+                  className="text-gray-700 hover:text-black transition-colors py-2 px-2 rounded-lg hover:bg-gray-50 text-left"
                 >
                   대시보드
                 </button>
@@ -236,7 +231,7 @@ const Header: React.FC<HeaderProps> = ({ onStartChatbot, onLogin, onSignup }) =>
                     onStartChatbot();
                     closeMobileMenu();
                   }}
-                  className="text-white/90 hover:text-white transition-colors py-2 px-2 rounded-lg hover:bg-white/10 text-left"
+                  className="text-gray-700 hover:text-black transition-colors py-2 px-2 rounded-lg hover:bg-gray-50 text-left"
                 >
                   AI 상담
                 </button>
@@ -245,15 +240,15 @@ const Header: React.FC<HeaderProps> = ({ onStartChatbot, onLogin, onSignup }) =>
                     navigate('/mypage');
                     closeMobileMenu();
                   }}
-                  className="text-white/90 hover:text-white transition-colors py-2 px-2 rounded-lg hover:bg-white/10 text-left"
+                  className="text-gray-700 hover:text-black transition-colors py-2 px-2 rounded-lg hover:bg-gray-50 text-left"
                 >
                   마이페이지 ({user?.nickname})
                 </button>
                 
-                <div className="pt-2 border-t border-white/20">
+                <div className="pt-2 border-t border-gray-100">
                   <button
                     onClick={handleLogout}
-                    className="w-full text-white/90 hover:text-white font-medium py-3 px-6 rounded-full hover:bg-white/10 transition-all text-left"
+                    className="w-full text-gray-700 hover:text-black font-medium py-3 px-6 rounded-full hover:bg-gray-50 transition-all text-left"
                   >
                     로그아웃
                   </button>
@@ -263,33 +258,33 @@ const Header: React.FC<HeaderProps> = ({ onStartChatbot, onLogin, onSignup }) =>
               <>
                 <a 
                   href="#features" 
-                  className="text-white/90 hover:text-white transition-colors py-2 px-2 rounded-lg hover:bg-white/10"
+                  className="text-gray-700 hover:text-black transition-colors py-2 px-2 rounded-lg hover:bg-gray-50"
                   onClick={closeMobileMenu}
                 >
                   기능
                 </a>
                 <a 
                   href="#how-it-works" 
-                  className="text-white/90 hover:text-white transition-colors py-2 px-2 rounded-lg hover:bg-white/10"
+                  className="text-gray-700 hover:text-black transition-colors py-2 px-2 rounded-lg hover:bg-gray-50"
                   onClick={closeMobileMenu}
                 >
                   이용방법
                 </a>
                 <a 
                   href="#pricing" 
-                  className="text-white/90 hover:text-white transition-colors py-2 px-2 rounded-lg hover:bg-white/10"
+                  className="text-gray-700 hover:text-black transition-colors py-2 px-2 rounded-lg hover:bg-gray-50"
                   onClick={closeMobileMenu}
                 >
                   요금제
                 </a>
                 
-                <div className="pt-2 border-t border-white/20 space-y-3">
+                <div className="pt-2 border-t border-gray-100 space-y-3">
                   <button
                     onClick={() => {
                       onStartChatbot();
                       closeMobileMenu();
                     }}
-                    className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-semibold py-3 px-6 rounded-full transition-all"
+                    className="w-full bg-black hover:bg-gray-800 text-white font-semibold py-3 px-6 rounded-full transition-all"
                   >
                     AI 상담 시작
                   </button>
@@ -300,7 +295,7 @@ const Header: React.FC<HeaderProps> = ({ onStartChatbot, onLogin, onSignup }) =>
                         onLogin();
                         closeMobileMenu();
                       }}
-                      className="w-full text-white/90 hover:text-white font-medium py-3 px-6 rounded-full hover:bg-white/10 transition-all"
+                      className="w-full text-gray-700 hover:text-black font-medium py-3 px-6 rounded-full hover:bg-gray-50 transition-all"
                     >
                       로그인
                     </button>
@@ -312,7 +307,7 @@ const Header: React.FC<HeaderProps> = ({ onStartChatbot, onLogin, onSignup }) =>
                         onSignup();
                         closeMobileMenu();
                       }}
-                      className="w-full bg-white/20 backdrop-blur-sm text-white font-semibold py-3 px-6 rounded-full border border-white/30 hover:bg-white/30 transition-all"
+                      className="w-full bg-gray-50 text-black font-semibold py-3 px-6 rounded-full border border-gray-200 hover:bg-gray-100 transition-all"
                     >
                       회원가입
                     </button>

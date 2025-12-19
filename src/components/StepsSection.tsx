@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 // Steps Section Component
 interface Step {
@@ -12,6 +12,32 @@ interface StepsSectionProps {
 }
 
 const StepsSection: React.FC<StepsSectionProps> = ({ onGetStarted }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
+  }, []);
+
   const steps: Step[] = [
     {
       step: "1",
@@ -36,33 +62,45 @@ const StepsSection: React.FC<StepsSectionProps> = ({ onGetStarted }) => {
   ];
 
   return (
-    <section className="py-16 sm:py-20 bg-white/5 backdrop-blur-sm relative">
-      <div className="container mx-auto px-4 sm:px-6">
-        <div className="text-center mb-12 sm:mb-16">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 px-4">
+    <section ref={sectionRef} className="py-16 bg-gradient-to-b from-white to-pink-50 relative overflow-hidden">
+      {/* 배경 장식 */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-10 left-10 w-[450px] h-[450px] bg-gradient-to-br from-rose-200 to-pink-200 rounded-full blur-3xl opacity-20"></div>
+        <div className="absolute bottom-10 right-10 w-[500px] h-[500px] bg-gradient-to-br from-violet-200 to-purple-200 rounded-full blur-3xl opacity-25"></div>
+        <div className="absolute top-1/3 right-1/4 w-72 h-72 bg-gradient-to-br from-fuchsia-200 to-pink-200 rounded-full blur-2xl opacity-15"></div>
+      </div>
+      
+      <div className="container mx-auto px-6 max-w-6xl relative z-10">
+        <div className={`text-center mb-12 transition-all duration-1000 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}>
+          <h2 className="text-2xl md:text-3xl font-extrabold text-black mb-4 px-4 leading-relaxed md:leading-relaxed">
             단 4단계로 완성되는 완벽한 파티
           </h2>
-          <p className="text-lg sm:text-xl text-white/80 px-4">
+          <p className="text-base text-gray-600 max-w-2xl mx-auto px-4 leading-relaxed">
             복잡했던 파티 준비가 이렇게 간단해질 줄 몰랐을 거예요
           </p>
         </div>
 
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {steps.map((step, index) => (
               <div 
                 key={index}
-                className="text-center px-4 p-6 bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:-translate-y-2"
+                className={`text-center p-6 bg-gray-50 rounded-3xl hover:shadow-lg transition-all duration-500 transform hover:-translate-y-1 border border-gray-200 ${
+                  isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                }`}
+                style={{ transitionDelay: `${index * 150}ms` }}
               >
                 <div className="relative mb-6">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-yellow-400 to-pink-500 rounded-full flex items-center justify-center text-white text-xl sm:text-2xl font-bold shadow-lg mx-auto animate-bounce">
+                  <div className="w-20 h-20 bg-gradient-to-br from-gray-900 to-gray-700 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-md mx-auto">
                     {step.step}
                   </div>
                 </div>
-                <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 text-white">
+                <h3 className="text-lg font-bold mb-3 text-black leading-relaxed">
                   {step.title}
                 </h3>
-                <p className="text-sm sm:text-base text-white/80 leading-relaxed">
+                <p className="text-sm text-gray-600 leading-relaxed">
                   {step.description}
                 </p>
               </div>
@@ -70,10 +108,10 @@ const StepsSection: React.FC<StepsSectionProps> = ({ onGetStarted }) => {
           </div>
         </div>
 
-        <div className="text-center mt-12 sm:mt-16 px-4">
+        <div className="text-center mt-16 px-4">
           <button 
             onClick={onGetStarted}
-            className="w-full sm:w-auto bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-bold py-4 px-8 rounded-full shadow-lg transition-all transform hover:scale-105"
+            className="w-full sm:w-auto bg-black hover:bg-gray-800 text-white font-semibold py-4 px-10 rounded-full transition-all transform hover:scale-105 shadow-sm"
           >
             지금 바로 시작해보기
           </button>

@@ -34,6 +34,13 @@ const MailIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const LockIcon = ({ className }: { className?: string }) => (
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+  </svg>
+);
+
 interface LoginPageProps {
   onBack: () => void;
   onSignup: () => void;
@@ -148,36 +155,42 @@ const LoginPage: React.FC<LoginPageProps> = ({ onBack, onSignup }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50 flex flex-col relative overflow-hidden">
+      {/* 배경 장식 */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-br from-purple-200 to-pink-200 rounded-full blur-3xl opacity-20"></div>
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gradient-to-br from-blue-200 to-cyan-200 rounded-full blur-3xl opacity-25"></div>
+      </div>
+      
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4 flex items-center">
+      <header className="bg-white/90 backdrop-blur-md border-b border-gray-200/50 sticky top-0 z-10 shadow-sm">
+        <div className="container mx-auto px-6 py-5 flex items-center">
           <Button
             variant="ghost"
             size="sm"
             onClick={onBack}
-            className="mr-4"
+            className="mr-4 text-gray-700 hover:text-gray-900"
           >
             <ArrowLeftIcon className="w-5 h-5 mr-2" />
             뒤로가기
           </Button>
-          <h1 className="text-lg font-semibold text-gray-800">로그인</h1>
+          <h1 className="text-xl font-bold text-gray-800">로그인</h1>
         </div>
       </header>
 
       {/* Main Content */}
-      <div className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+      <div className="flex-1 flex items-center justify-center p-6 relative z-10">
         <div className="w-full max-w-md">
-          <Card className="shadow-xl border-0 bg-white/90 backdrop-blur-sm">
-            <CardHeader className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <MailIcon className="w-8 h-8 text-white" />
+          <Card className="shadow-sm border border-gray-100 bg-white rounded-3xl">
+            <CardHeader className="text-center p-8">
+              <div className="w-20 h-20 bg-gradient-to-br from-gray-700 to-gray-900 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <LockIcon className="w-10 h-10 text-white" />
               </div>
-              <CardTitle className="text-2xl font-bold text-gray-800 mb-2">
+              <CardTitle className="text-2xl font-extrabold text-black mb-3 leading-relaxed">
                 다시 만나서 반가워요!
               </CardTitle>
-              <p className="text-gray-600">
-                계정에 로그인하여 파티 플래닝을 시작하세요
+              <p className="text-base text-gray-600 leading-relaxed">
+                로그인하고 즐거운 파티를 계획해보세요
               </p>
             </CardHeader>
             
@@ -221,13 +234,13 @@ const LoginPage: React.FC<LoginPageProps> = ({ onBack, onSignup }) => {
                   <label className="flex items-center">
                     <input
                       type="checkbox"
-                      className="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 rounded focus:ring-purple-500 focus:ring-2"
+                      className="w-4 h-4 text-black bg-white border-gray-300 rounded focus:ring-black focus:ring-2"
                     />
                     <span className="ml-2 text-gray-600">로그인 상태 유지</span>
                   </label>
                   <button
                     type="button"
-                    className="text-purple-600 hover:text-purple-800 transition-colors"
+                    className="text-black hover:text-gray-700 transition-colors font-medium"
                   >
                     비밀번호 찾기
                   </button>
@@ -242,7 +255,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onBack, onSignup }) => {
                 <Button
                   type="submit"
                   fullWidth
-                  size="lg"
+                  size="md"
                   loading={isLoading}
                   className="mt-6"
                 >
@@ -250,12 +263,12 @@ const LoginPage: React.FC<LoginPageProps> = ({ onBack, onSignup }) => {
                 </Button>
               </form>
 
-              <div className="mt-6 text-center">
+              <div className="mt-6 text-center pb-4">
                 <p className="text-gray-600">
                   아직 계정이 없으신가요?{' '}
                   <button
                     onClick={onSignup}
-                    className="text-purple-600 hover:text-purple-800 font-medium transition-colors"
+                    className="text-black hover:text-gray-700 font-semibold transition-colors"
                   >
                     회원가입하기
                   </button>
