@@ -3,22 +3,13 @@ import HeroSection from "../components/HeroSection";
 import FeatureSection from "../components/FeaturesSection";
 import StepsSection from "../components/StepsSection";
 
-interface LandingPageProps {
-  onStartChatbot: () => void;
-  onDemo?: () => void;
-  onGetStarted?: () => void;
-}
-
-const LandingPage: React.FC<LandingPageProps> = ({ onDemo, onGetStarted }) => {
+const LandingPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-white relative overflow-hidden pt-20">
 
-      <HeroSection 
-        onGetStarted={onGetStarted} 
-        onDemo={onDemo} 
-      />
+      <HeroSection />
       <FeatureSection />
-      <StepsSection onGetStarted={onGetStarted} />
+      <StepsSection />
     </div>
   );
 };
