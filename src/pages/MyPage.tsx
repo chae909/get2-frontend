@@ -30,57 +30,45 @@ const MyPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-pink-800 relative overflow-hidden pt-16 sm:pt-20">
+    <div className="min-h-screen bg-gradient-to-b from-purple-50 via-pink-50 to-blue-50 relative overflow-hidden pt-20">
       {/* 배경 장식 */}
-      <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
-        <svg width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
-          <defs>
-            <radialGradient id="mypageGrad1" cx="80%" cy="20%" r="40%">
-              <stop offset="0%" style={{stopColor: 'rgba(139, 92, 246, 0.3)', stopOpacity:1}} />
-              <stop offset="100%" style={{stopColor: 'rgba(139, 92, 246, 0)', stopOpacity:0}} />
-            </radialGradient>
-            <radialGradient id="mypageGrad2" cx="20%" cy="80%" r="50%">
-              <stop offset="0%" style={{stopColor: 'rgba(236, 72, 153, 0.2)', stopOpacity:1}} />
-              <stop offset="100%" style={{stopColor: 'rgba(236, 72, 153, 0)', stopOpacity:0}} />
-            </radialGradient>
-          </defs>
-          <circle cx="80%" cy="20%" r="250" fill="url(#mypageGrad1)" className="animate-pulse" style={{animationDuration: '7s'}} />
-          <circle cx="20%" cy="80%" r="300" fill="url(#mypageGrad2)" className="animate-pulse" style={{animationDuration: '5s'}} />
-        </svg>
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-10 left-10 w-[350px] h-[350px] bg-gradient-to-br from-indigo-200 to-purple-200 rounded-full blur-3xl opacity-20"></div>
+        <div className="absolute bottom-10 right-10 w-[400px] h-[400px] bg-gradient-to-br from-pink-200 to-rose-200 rounded-full blur-3xl opacity-20"></div>
       </div>
-
-      <div className="container mx-auto p-6 md:p-8 max-w-4xl relative z-10">
-        <h1 className="text-3xl font-bold text-white mb-8">마이페이지</h1>
+      
+      <div className="container mx-auto p-6 max-w-4xl relative z-10">
+        <h1 className="text-2xl md:text-3xl font-extrabold text-black mb-8 leading-relaxed md:leading-relaxed">마이페이지</h1>
 
         {/* 프로필 정보 섹션 */}
-        <div className="bg-white/10 backdrop-blur-lg p-6 rounded-2xl shadow-2xl mb-8 flex items-center space-x-6 opacity-0 animate-slide-up border border-white/20">
-          <div className="w-20 h-20 bg-gradient-to-br from-yellow-400 to-pink-500 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+        <div className="bg-gray-50 p-6 rounded-3xl mb-8 flex items-center space-x-6 border border-gray-100">
+          <div className="w-24 h-24 bg-black rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-sm">
             {user.nickname?.charAt(0) || 'U'}
           </div>
           <div className="flex-1">
-            <h2 className="text-2xl font-bold text-white">{user.nickname || '사용자'}</h2>
-            <p className="text-white/70">{user.email}</p>
-            <p className="text-sm text-white/50 mt-1">GET2와 함께한 지 30일째</p>
+            <h2 className="text-2xl font-extrabold text-black leading-relaxed">{user.nickname || '사용자'}</h2>
+            <p className="text-gray-600 text-lg mt-1">{user.email}</p>
+            <p className="text-sm text-gray-500 mt-2">GET2와 함께한 지 30일째</p>
           </div>
-          <button className="p-2 text-white/60 hover:text-white transition-colors hover:bg-white/10 rounded-lg">
-            <Settings className="w-5 h-5" />
+          <button className="p-3 text-gray-600 hover:text-black transition-colors hover:bg-gray-100 rounded-lg">
+            <Settings className="w-6 h-6" />
           </button>
         </div>
 
         {/* 내 플랜 보관함 섹션 */}
-        <div className="bg-white/10 backdrop-blur-lg p-6 rounded-2xl shadow-2xl mb-8 opacity-0 animate-slide-up delay-200 border border-white/20">
-          <h2 className="text-xl font-bold mb-4 text-white">내 플랜 보관함</h2>
+        <div className="bg-gray-50 p-6 rounded-3xl mb-8 border border-gray-100">
+          <h2 className="text-2xl font-bold mb-6 text-black leading-relaxed">내 플랜 보관함</h2>
           <div className="space-y-4">
             <div 
-              className="bg-white/10 backdrop-blur-sm p-4 rounded-xl flex justify-between items-center hover:bg-white/20 cursor-pointer transition-all duration-300 border border-white/30"
+              className="bg-white p-6 rounded-2xl flex justify-between items-center hover:shadow-md cursor-pointer transition-all duration-300 border border-gray-100"
               onClick={() => handlePlanClick('plan1')}
             >
               <div>
-                <p className="font-bold text-white">성수동 주말 데이트</p>
-                <p className="text-sm text-white/70">2025년 9월 12일 · 데이트</p>
-                <div className="flex items-center mt-1">
-                  <MapPin className="w-3 h-3 text-white/50 mr-1" />
-                  <span className="text-xs text-white/50">성수동, 서울숲</span>
+                <p className="font-bold text-black text-lg">성수동 주말 데이트</p>
+                <p className="text-sm text-gray-600 mt-1">2025년 9월 12일 · 데이트</p>
+                <div className="flex items-center mt-2">
+                  <MapPin className="w-4 h-4 text-gray-500 mr-1" />
+                  <span className="text-sm text-gray-500">성수동, 서울숲</span>
                 </div>
               </div>
               <div className="flex items-center space-x-1">
@@ -88,38 +76,38 @@ const MyPage: React.FC = () => {
                   {[1, 2, 3, 4, 5].map((star) => (
                     <Star
                       key={star}
-                      className={`w-4 h-4 ${star <= 4 ? 'text-yellow-400 fill-current' : 'text-white/30'}`}
+                      className={`w-5 h-5 ${star <= 4 ? 'text-black fill-current' : 'text-gray-300'}`}
                     />
                   ))}
                 </div>
-                <span className="text-sm text-white/50">(4/5)</span>
+                <span className="text-sm text-gray-500 font-medium">(4/5)</span>
               </div>
             </div>
             
             <div 
-              className="bg-white/10 backdrop-blur-sm p-4 rounded-xl flex justify-between items-center hover:bg-white/20 cursor-pointer transition-all duration-300 border border-white/30"
+              className="bg-white p-6 rounded-2xl flex justify-between items-center hover:shadow-md cursor-pointer transition-all duration-300 border border-gray-100"
               onClick={() => handlePlanClick('plan2')}
             >
               <div>
-                <p className="font-bold text-white">연말 동기 파티</p>
-                <p className="text-sm text-white/70">2025년 12월 28일 · 파티</p>
-                <div className="flex items-center mt-1">
-                  <MapPin className="w-3 h-3 text-white/50 mr-1" />
-                  <span className="text-xs text-white/50">강남, 홍대</span>
+                <p className="font-bold text-black text-lg">연말 동기 파티</p>
+                <p className="text-sm text-gray-600 mt-1">2025년 12월 28일 · 파티</p>
+                <div className="flex items-center mt-2">
+                  <MapPin className="w-4 h-4 text-gray-500 mr-1" />
+                  <span className="text-sm text-gray-500">강남, 홍대</span>
                 </div>
               </div>
-              <div className="text-sm text-pink-300 font-medium">
+              <div className="text-sm text-black font-semibold">
                 피드백 남기기
               </div>
             </div>
             
-            <div className="bg-white/10 backdrop-blur-sm p-4 rounded-xl flex justify-between items-center hover:bg-white/20 cursor-pointer transition-all duration-300 border border-white/30">
+            <div className="bg-white p-6 rounded-2xl flex justify-between items-center hover:shadow-md cursor-pointer transition-all duration-300 border border-gray-100">
               <div>
-                <p className="font-bold text-white">가족 나들이</p>
-                <p className="text-sm text-white/70">2025년 10월 15일 · 모임</p>
-                <div className="flex items-center mt-1">
-                  <MapPin className="w-3 h-3 text-white/50 mr-1" />
-                  <span className="text-xs text-white/50">서울대공원, 과천</span>
+                <p className="font-bold text-black text-lg">가족 나들이</p>
+                <p className="text-sm text-gray-600 mt-1">2025년 10월 15일 · 모임</p>
+                <div className="flex items-center mt-2">
+                  <MapPin className="w-4 h-4 text-gray-500 mr-1" />
+                  <span className="text-sm text-gray-500">서울대공원, 과천</span>
                 </div>
               </div>
               <div className="flex items-center space-x-1">
@@ -127,82 +115,82 @@ const MyPage: React.FC = () => {
                   {[1, 2, 3, 4, 5].map((star) => (
                     <Star
                       key={star}
-                      className={`w-4 h-4 ${star <= 5 ? 'text-yellow-400 fill-current' : 'text-white/30'}`}
+                      className={`w-5 h-5 ${star <= 5 ? 'text-black fill-current' : 'text-gray-300'}`}
                     />
                   ))}
                 </div>
-                <span className="text-sm text-white/50">(5/5)</span>
+                <span className="text-sm text-gray-500 font-medium">(5/5)</span>
               </div>
             </div>
           </div>
         </div>
 
         {/* 개인 설정 섹션 */}
-        <div className="bg-white/10 backdrop-blur-lg p-6 rounded-2xl shadow-2xl mb-8 opacity-0 animate-slide-up delay-400 border border-white/20">
-          <h2 className="text-xl font-bold mb-4 text-white">개인 설정</h2>
+        <div className="bg-gray-50 p-6 rounded-3xl mb-8 border border-gray-100">
+          <h2 className="text-2xl font-bold mb-6 text-black leading-relaxed">개인 설정</h2>
           <div className="space-y-4">
-            <div className="flex justify-between items-center py-2">
+            <div className="flex justify-between items-center py-3">
               <div className="flex items-center space-x-3">
-                <Bell className="w-5 h-5 text-white/70" />
-                <p className="text-white">알림 설정</p>
+                <Bell className="w-5 h-5 text-gray-600" />
+                <p className="text-black font-medium">알림 설정</p>
               </div>
               <label className="relative inline-flex items-center cursor-pointer">
                 <input type="checkbox" className="sr-only peer" defaultChecked />
-                <div className="w-11 h-6 bg-white/20 rounded-full peer peer-focus:ring-4 peer-focus:ring-pink-300/50 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-pink-500"></div>
+                <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-gray-300 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-black"></div>
               </label>
             </div>
             
-            <div className="flex justify-between items-center py-2">
+            <div className="flex justify-between items-center py-3">
               <div className="flex items-center space-x-3">
-                <MapPin className="w-5 h-5 text-white/70" />
-                <p className="text-white">선호 지역</p>
+                <MapPin className="w-5 h-5 text-gray-600" />
+                <p className="text-black font-medium">선호 지역</p>
               </div>
-              <button className="text-white/70 font-semibold hover:text-white transition-colors">
-                강남, 홍대 <span className="text-white/50 ml-1">&gt;</span>
+              <button className="text-gray-600 font-semibold hover:text-black transition-colors">
+                강남, 홍대 <span className="text-gray-400 ml-1">&gt;</span>
               </button>
             </div>
             
-            <div className="flex justify-between items-center py-2">
+            <div className="flex justify-between items-center py-3">
               <div className="flex items-center space-x-3">
-                <Moon className="w-5 h-5 text-white/70" />
-                <p className="text-white">테마 설정</p>
+                <Moon className="w-5 h-5 text-gray-600" />
+                <p className="text-black font-medium">테마 설정</p>
               </div>
-              <button className="text-white/70 font-semibold hover:text-white transition-colors">
-                라이트 모드 <span className="text-white/50 ml-1">&gt;</span>
+              <button className="text-gray-600 font-semibold hover:text-black transition-colors">
+                라이트 모드 <span className="text-gray-400 ml-1">&gt;</span>
               </button>
             </div>
             
-            <div className="flex justify-between items-center py-2">
+            <div className="flex justify-between items-center py-3">
               <div className="flex items-center space-x-3">
-                <Settings className="w-5 h-5 text-white/70" />
-                <p className="text-white">계정 관리</p>
+                <Settings className="w-5 h-5 text-gray-600" />
+                <p className="text-black font-medium">계정 관리</p>
               </div>
-              <button className="text-white/70 font-semibold hover:text-white transition-colors">
-                설정 <span className="text-white/50 ml-1">&gt;</span>
+              <button className="text-gray-600 font-semibold hover:text-black transition-colors">
+                설정 <span className="text-gray-400 ml-1">&gt;</span>
               </button>
             </div>
           </div>
         </div>
 
         {/* 통계 정보 섹션 */}
-        <div className="bg-white/10 backdrop-blur-lg p-6 rounded-2xl shadow-2xl mb-8 opacity-0 animate-slide-up delay-600 border border-white/20">
-          <h2 className="text-xl font-bold mb-4 text-white">나의 플랜 통계</h2>
+        <div className="bg-gray-50 p-6 rounded-3xl mb-8 border border-gray-100">
+          <h2 className="text-xl font-bold mb-6 text-black leading-relaxed">나의 플랜 통계</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center p-4 bg-pink-500/20 backdrop-blur-sm rounded-xl border border-pink-400/30">
-              <p className="text-2xl font-bold text-pink-300">12</p>
-              <p className="text-sm text-white/70">총 플랜</p>
+            <div className="text-center p-6 bg-white rounded-2xl border border-gray-100">
+              <p className="text-3xl font-bold text-black">12</p>
+              <p className="text-sm text-gray-600 mt-2">총 플랜</p>
             </div>
-            <div className="text-center p-4 bg-blue-500/20 backdrop-blur-sm rounded-xl border border-blue-400/30">
-              <p className="text-2xl font-bold text-blue-300">8</p>
-              <p className="text-sm text-white/70">완료한 플랜</p>
+            <div className="text-center p-6 bg-white rounded-2xl border border-gray-100">
+              <p className="text-3xl font-bold text-black">8</p>
+              <p className="text-sm text-gray-600 mt-2">완료한 플랜</p>
             </div>
-            <div className="text-center p-4 bg-green-500/20 backdrop-blur-sm rounded-xl border border-green-400/30">
-              <p className="text-2xl font-bold text-green-300">4.2</p>
-              <p className="text-sm text-white/70">평균 평점</p>
+            <div className="text-center p-6 bg-white rounded-2xl border border-gray-100">
+              <p className="text-3xl font-bold text-black">4.2</p>
+              <p className="text-sm text-gray-600 mt-2">평균 평점</p>
             </div>
-            <div className="text-center p-4 bg-purple-500/20 backdrop-blur-sm rounded-xl border border-purple-400/30">
-              <p className="text-2xl font-bold text-purple-300">성수동</p>
-              <p className="text-sm text-white/70">선호 지역</p>
+            <div className="text-center p-6 bg-white rounded-2xl border border-gray-100">
+              <p className="text-3xl font-bold text-black">성수동</p>
+              <p className="text-sm text-gray-600 mt-2">선호 지역</p>
             </div>
           </div>
         </div>
@@ -210,7 +198,7 @@ const MyPage: React.FC = () => {
         {/* 로그아웃 버튼 */}
         <button 
           onClick={handleLogout} 
-          className="w-full bg-white/10 backdrop-blur-sm text-white font-semibold py-3 px-4 rounded-xl hover:bg-white/20 transition-all duration-300 flex items-center justify-center space-x-2 border border-white/30"
+          className="w-full bg-gray-50 text-black font-semibold py-4 px-6 rounded-2xl hover:bg-gray-100 transition-all duration-300 flex items-center justify-center space-x-2 border border-gray-100"
         >
           <LogOut className="w-5 h-5" />
           <span>로그아웃</span>

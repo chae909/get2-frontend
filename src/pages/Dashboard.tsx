@@ -17,31 +17,19 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-pink-800 relative overflow-hidden pt-16 sm:pt-20">
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 via-purple-50 to-pink-50 relative overflow-hidden pt-20">
       {/* 배경 장식 */}
-      <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
-        <svg width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
-          <defs>
-            <radialGradient id="dashboardGrad1" cx="20%" cy="20%" r="40%">
-              <stop offset="0%" style={{stopColor: 'rgba(139, 92, 246, 0.4)', stopOpacity:1}} />
-              <stop offset="100%" style={{stopColor: 'rgba(139, 92, 246, 0)', stopOpacity:0}} />
-            </radialGradient>
-            <radialGradient id="dashboardGrad2" cx="80%" cy="80%" r="50%">
-              <stop offset="0%" style={{stopColor: 'rgba(236, 72, 153, 0.3)', stopOpacity:1}} />
-              <stop offset="100%" style={{stopColor: 'rgba(236, 72, 153, 0)', stopOpacity:0}} />
-            </radialGradient>
-          </defs>
-          <circle cx="20%" cy="20%" r="300" fill="url(#dashboardGrad1)" className="animate-pulse" style={{animationDuration: '6s'}} />
-          <circle cx="80%" cy="80%" r="200" fill="url(#dashboardGrad2)" className="animate-pulse" style={{animationDuration: '8s'}} />
-        </svg>
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-20 right-10 w-[400px] h-[400px] bg-gradient-to-br from-cyan-200 to-blue-200 rounded-full blur-3xl opacity-20"></div>
+        <div className="absolute bottom-20 left-10 w-[450px] h-[450px] bg-gradient-to-br from-purple-200 to-pink-200 rounded-full blur-3xl opacity-20"></div>
       </div>
-
-      <div className="container mx-auto p-6 md:p-8 relative z-10">
-        <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border border-white/20 mb-8">
-          <h1 className="text-3xl font-bold text-white mb-4 opacity-0 animate-fade-in">
+      
+      <div className="container mx-auto p-6 max-w-6xl relative z-10">
+        <div className="bg-gray-50 rounded-3xl p-8 mb-10 border border-gray-100">
+          <h1 className="text-2xl md:text-3xl font-extrabold text-black mb-4 leading-relaxed md:leading-relaxed">
             {user?.nickname}님, 오늘은 어떤 즐거운 계획을 세워볼까요?
           </h1>
-          <p className="text-white/80 mb-10 opacity-0 animate-fade-in delay-200">
+          <p className="text-base text-gray-600 leading-relaxed">
             아래에서 만들고 싶은 플랜의 종류를 선택해주세요.
           </p>
 
@@ -49,102 +37,102 @@ const Dashboard: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             <button 
               onClick={() => handlePlanRequest('데이트')} 
-              className="p-8 bg-gradient-to-br from-pink-400/30 to-red-400/30 backdrop-blur-lg rounded-2xl text-left hover:shadow-2xl transition-all duration-300 group transform hover:-translate-y-2 opacity-0 animate-slide-up border border-white/20 hover:border-pink-400/50"
+              className="p-8 bg-white rounded-3xl text-left hover:shadow-lg transition-all duration-300 group transform hover:-translate-y-1 border border-gray-100"
             >
-              <div className="flex items-center mb-2">
-                <Heart className="w-6 h-6 text-pink-300 mr-2" />
-                <h2 className="text-2xl font-bold text-white">새 데이트 플랜 만들기</h2>
+              <div className="flex items-center mb-4">
+                <Heart className="w-7 h-7 text-black mr-3" />
+                <h2 className="text-2xl font-bold text-black leading-relaxed">새 데이트 플랜 만들기</h2>
               </div>
-              <p className="text-white/80">연인과의 특별한 날을 위한 로맨틱한 코스를 계획해보세요.</p>
-              <ArrowRight className="w-5 h-5 text-pink-300 mt-4 group-hover:translate-x-2 transition-transform" />
+              <p className="text-gray-600 text-base leading-relaxed">연인과의 특별한 날을 위한 로맨틱한 코스를 계획해보세요.</p>
+              <ArrowRight className="w-6 h-6 text-black mt-6 group-hover:translate-x-2 transition-transform" />
             </button>
             
             <button 
               onClick={() => handlePlanRequest('파티')} 
-              className="p-8 bg-gradient-to-br from-indigo-400/30 to-purple-400/30 backdrop-blur-lg rounded-2xl text-left hover:shadow-2xl transition-all duration-300 group transform hover:-translate-y-2 opacity-0 animate-slide-up delay-200 border border-white/20 hover:border-purple-400/50"
+              className="p-10 bg-white rounded-3xl text-left hover:shadow-lg transition-all duration-300 group transform hover:-translate-y-1 border border-gray-100"
             >
-              <div className="flex items-center mb-2">
-                <Calendar className="w-6 h-6 text-purple-300 mr-2" />
-                <h2 className="text-2xl font-bold text-white">새 파티 플랜 만들기</h2>
+              <div className="flex items-center mb-4">
+                <Calendar className="w-7 h-7 text-black mr-3" />
+                <h2 className="text-xl font-bold text-black">새 파티 플랜 만들기</h2>
               </div>
-              <p className="text-white/80">친구들과의 생일, 기념일 파티를 멋지게 준비할 수 있어요.</p>
-              <ArrowRight className="w-5 h-5 text-purple-300 mt-4 group-hover:translate-x-2 transition-transform" />
+              <p className="text-gray-600 text-base leading-relaxed">친구들과의 생일, 기념일 파티를 멋지게 준비할 수 있어요.</p>
+              <ArrowRight className="w-6 h-6 text-black mt-6 group-hover:translate-x-2 transition-transform" />
             </button>
             
             <button 
               onClick={() => handlePlanRequest('모임')} 
-              className="p-8 bg-gradient-to-br from-green-400/30 to-blue-400/30 backdrop-blur-lg rounded-2xl text-left hover:shadow-2xl transition-all duration-300 group transform hover:-translate-y-2 opacity-0 animate-slide-up delay-400 border border-white/20 hover:border-blue-400/50"
+              className="p-10 bg-white rounded-3xl text-left hover:shadow-lg transition-all duration-300 group transform hover:-translate-y-1 border border-gray-100"
             >
-              <div className="flex items-center mb-2">
-                <Users className="w-6 h-6 text-blue-300 mr-2" />
-                <h2 className="text-2xl font-bold text-white">새 모임 플랜 만들기</h2>
+              <div className="flex items-center mb-4">
+                <Users className="w-7 h-7 text-black mr-3" />
+                <h2 className="text-xl font-bold text-black">새 모임 플랜 만들기</h2>
               </div>
-              <p className="text-white/80">가족, 동료, 친구들과의 모임을 간편하게 계획하세요.</p>
-              <ArrowRight className="w-5 h-5 text-blue-300 mt-4 group-hover:translate-x-2 transition-transform" />
+              <p className="text-gray-600 text-base leading-relaxed">가족, 동료, 친구들과의 모임을 간편하게 계획하세요.</p>
+              <ArrowRight className="w-6 h-6 text-black mt-6 group-hover:translate-x-2 transition-transform" />
             </button>
           </div>
         </div>
 
         {/* 최근 플랜 섹션 */}
-        <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border border-white/20 mb-8">
-          <h2 className="text-2xl font-bold text-white mb-6">최근 플랜</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-white/20 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 border border-white/30">
+        <div className="bg-gray-50 rounded-3xl p-10 sm:p-12 mb-12 border border-gray-100">
+          <h2 className="text-3xl font-bold text-black mb-8">최근 플랜</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="bg-white rounded-2xl shadow-sm overflow-hidden transform hover:scale-105 transition-transform duration-300 border border-gray-100">
               <img 
                 src="https://placehold.co/400x250/e0e0e0/333?text=성수동+카페거리" 
                 alt="플랜 이미지" 
                 className="w-full h-32 object-cover"
               />
               <div className="p-4">
-                <h3 className="font-bold text-white">성수동 주말 데이트</h3>
-                <p className="text-sm text-white/70">2025년 9월 12일</p>
+                <h3 className="font-bold text-black">성수동 주말 데이트</h3>
+                <p className="text-sm text-gray-600">2025년 9월 12일</p>
               </div>
             </div>
             
-            <div className="bg-white/20 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 border border-white/30">
+            <div className="bg-white rounded-2xl shadow-sm overflow-hidden transform hover:scale-105 transition-transform duration-300 border border-gray-100">
               <img 
                 src="https://placehold.co/400x250/d1d5db/333?text=강남+연말+파티" 
                 alt="플랜 이미지" 
                 className="w-full h-32 object-cover"
               />
               <div className="p-4">
-                <h3 className="font-bold text-white">연말 동기 파티</h3>
-                <p className="text-sm text-white/70">2025년 12월 28일</p>
+                <h3 className="font-bold text-black">연말 동기 파티</h3>
+                <p className="text-sm text-gray-600">2025년 12월 28일</p>
               </div>
             </div>
             
-            <div className="flex items-center justify-center bg-white/10 backdrop-blur-sm rounded-xl border-2 border-dashed border-white/30 text-white/50 h-48">
+            <div className="flex items-center justify-center bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 text-gray-400 h-48">
               플랜 없음
             </div>
             
-            <div className="flex items-center justify-center bg-white/10 backdrop-blur-sm rounded-xl border-2 border-dashed border-white/30 text-white/50 h-48">
+            <div className="flex items-center justify-center bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 text-gray-400 h-48">
               플랜 없음
             </div>
           </div>
         </div>
 
         {/* 추천 테마 섹션 */}
-        <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border border-white/20">
-          <h2 className="text-2xl font-bold text-white mb-6">추천 테마</h2>
-          <div className="flex space-x-4 overflow-x-auto pb-4">
-            <div className="flex-shrink-0 w-64 bg-white/20 backdrop-blur-sm rounded-xl shadow-lg p-4 transform hover:-translate-y-1 transition-transform cursor-pointer border border-white/30">
-              <h3 className="font-bold text-white">☔ 비 오는 날 실내 데이트</h3>
-              <p className="text-sm text-white/70 mt-1">#감성 #파전 #막걸리</p>
+        <div className="bg-gray-50 rounded-3xl p-10 sm:p-12 border border-gray-100">
+          <h2 className="text-3xl font-bold text-black mb-8">추천 테마</h2>
+          <div className="flex space-x-6 overflow-x-auto pb-4">
+            <div className="flex-shrink-0 w-72 bg-white rounded-2xl shadow-sm p-6 transform hover:-translate-y-1 transition-transform cursor-pointer border border-gray-100">
+              <h3 className="font-bold text-black text-lg">☔ 비 오는 날 실내 데이트</h3>
+              <p className="text-sm text-gray-600 mt-2">#감성 #파전 #막걸리</p>
             </div>
             
-            <div className="flex-shrink-0 w-64 bg-white/20 backdrop-blur-sm rounded-xl shadow-lg p-4 transform hover:-translate-y-1 transition-transform cursor-pointer border border-white/30">
-              <h3 className="font-bold text-white">🔥 불금 제대로 즐기기</h3>
-              <p className="text-sm text-white/70 mt-1">#홍대 #클럽 #가성비</p>
+            <div className="flex-shrink-0 w-72 bg-white rounded-2xl shadow-sm p-6 transform hover:-translate-y-1 transition-transform cursor-pointer border border-gray-100">
+              <h3 className="font-bold text-black text-lg">🔥 불금 제대로 즐기기</h3>
+              <p className="text-sm text-gray-600 mt-2">#홍대 #클럽 #가성비</p>
             </div>
             
-            <div className="flex-shrink-0 w-64 bg-white/20 backdrop-blur-sm rounded-xl shadow-lg p-4 transform hover:-translate-y-1 transition-transform cursor-pointer border border-white/30">
-              <h3 className="font-bold text-white">👨‍👩‍👧‍👦 가족과 함께하는 주말 나들이</h3>
-              <p className="text-sm text-white/70 mt-1">#공원 #자연 #키즈존</p>
+            <div className="flex-shrink-0 w-72 bg-white rounded-2xl shadow-sm p-6 transform hover:-translate-y-1 transition-transform cursor-pointer border border-gray-100">
+              <h3 className="font-bold text-black text-lg">👨‍👩‍👧‍👦 가족과 함께하는 주말 나들이</h3>
+              <p className="text-sm text-gray-600 mt-2">#공원 #자연 #키즈존</p>
             </div>
             
-            <div className="flex-shrink-0 w-64 bg-white/20 backdrop-blur-sm rounded-xl shadow-lg p-4 transform hover:-translate-y-1 transition-transform cursor-pointer border border-white/30">
-              <h3 className="font-bold text-white">🌙 야경이 아름다운 저녁 데이트</h3>
-              <p className="text-sm text-white/70 mt-1">#반포대교 #한강 #야경</p>
+            <div className="flex-shrink-0 w-72 bg-white rounded-2xl shadow-sm p-6 transform hover:-translate-y-1 transition-transform cursor-pointer border border-gray-100">
+              <h3 className="font-bold text-black text-lg">🌙 야경이 아름다운 저녁 데이트</h3>
+              <p className="text-sm text-gray-600 mt-2">#반포대교 #한강 #야경</p>
             </div>
           </div>
         </div>
